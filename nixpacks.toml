@@ -1,2 +1,2 @@
 [phases.setup]
-aptPkgs = ["php-gd"]
+phpExtensions = ["gd"]
