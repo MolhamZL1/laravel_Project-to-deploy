@@ -1,2 +1,16 @@
 [phases.setup]
 phpExtensions = ["gd", "zip", "curl", "json", "mysqli", "intl", "openssl", "ctype", "dom", "fileinfo", "filter", "hash", "mbstring", "pcre", "pdo", "session", "tokenizer", "xml", "pdo_mysql", "redis"]
+
+[phases.build]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "php artisan key:generate --no-interaction || true",
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "php artisan view:cache",
+    "php artisan storage:link || true",
+    "chmod -R 775 storage bootstrap/cache || true"
+]
+
+[phases.start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
