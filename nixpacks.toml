@@ -1,2 +1,2 @@
 [phases.setup]
-phpExtensions = ["gd"]
+phpExtensions = ["gd", "zip", "curl", "json", "mysqli", "intl", "openssl", "ctype", "dom", "fileinfo", "filter", "hash", "mbstring", "pcre", "pdo", "session", "tokenizer", "xml", "pdo_mysql", "redis"]
