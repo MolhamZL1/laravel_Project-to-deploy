@@ -1,4 +1,5 @@
 [phases.setup]
+
 nixPkgs = [
     "php82Extensions.gd",
     "php82Extensions.zip",
@@ -8,6 +9,9 @@ nixPkgs = [
     "php82Extensions.pdo_mysql",
     "php82Extensions.redis"
 ]
+
+phpExtensions = ["gd", "zip", "curl", "json", "mysqli", "intl", "openssl", "ctype", "dom", "fileinfo", "filter", "hash", "mbstring", "pcre", "pdo", "session", "tokenizer", "xml", "pdo_mysql", "redis"]
+
 
 [phases.build]
 cmds = [
