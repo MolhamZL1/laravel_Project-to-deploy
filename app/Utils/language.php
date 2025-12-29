@@ -86,13 +86,11 @@ if (!function_exists('getDefaultLanguage')) {
             $data = getWebConfig('language');
             $code = 'en';
             $direction = 'ltr';
-            if ($data && is_array($data)) {
-                foreach ($data as $ln) {
-                    if (array_key_exists('default', $ln) && $ln['default']) {
-                        $code = $ln['code'];
-                        if (array_key_exists('direction', $ln)) {
-                            $direction = $ln['direction'];
-                        }
+            foreach ($data as $ln) {
+                if (array_key_exists('default', $ln) && $ln['default']) {
+                    $code = $ln['code'];
+                    if (array_key_exists('direction', $ln)) {
+                        $direction = $ln['direction'];
                     }
                 }
             }

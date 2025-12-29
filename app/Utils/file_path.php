@@ -188,14 +188,7 @@ if (!function_exists('getValidImage')) {
             } else {
                 $result = $path;
             }
-            $url = asset($result);
-            
-            // Force HTTPS in production (Railway serves over HTTPS)
-            if (app()->environment('production') || app()->environment('staging')) {
-                $url = str_replace('http://', 'https://', $url);
-            }
-            
-            return $url;
+            return asset($result);
         }
     }
 
@@ -207,14 +200,7 @@ if (!function_exists('getValidImage')) {
             } else {
                 $result = $path;
             }
-            $url = asset($result);
-            
-            // Force HTTPS in production (Railway serves over HTTPS)
-            if (app()->environment('production') || app()->environment('staging')) {
-                $url = str_replace('http://', 'https://', $url);
-            }
-            
-            return $url;
+            return asset($result);
         }
     }
     function validFileCheck($path)

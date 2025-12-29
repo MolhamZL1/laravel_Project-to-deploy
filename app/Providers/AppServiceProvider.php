@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,11 +62,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Force HTTPS URLs in production (Railway serves over HTTPS)
-        if (app()->environment('production') || app()->environment('staging')) {
-            URL::forceScheme('https');
-        }
-        
         if (!App::runningInConsole()) {
             Paginator::useBootstrap();
 
@@ -75,6 +69,28 @@ class AppServiceProvider extends ServiceProvider
             Config::set('get_payment_publish_status', $this->get_payment_publish_status());
 
             Config::set('get_theme_routes', $this->get_theme_routes());
+
+            // Initialize default web_config to ensure it's always available
+            $web_config = [
+                'primary_color' => '#007bff',
+                'secondary_color' => '#6c757d',
+                'primary_color_light' => '',
+                'name' => (object)['value' => 'Company'],
+                'phone' => (object)['value' => ''],
+                'web_logo' => null,
+                'mob_logo' => null,
+                'fav_icon' => null,
+                'email' => (object)['value' => ''],
+                'about' => (object)['value' => ''],
+                'footer_logo' => null,
+                'copyright_text' => (object)['value' => ''],
+                'decimal_point_settings' => 0,
+                'seller_registration' => '0',
+                'wallet_status' => 0,
+                'loyalty_point_status' => 0,
+                'guest_checkout_status' => 0,
+            ];
+            $language = null;
 
             try {
                 if (Schema::hasTable('business_settings')) {
@@ -207,15 +223,20 @@ class AppServiceProvider extends ServiceProvider
                     $language = BusinessSetting::where('type', 'language')->first();
 
                     //currency
-                    \App\Utils\Helpers::currency_load();
-
-                    View::share(['web_config' => $web_config, 'language' => $language]);
-
-                    Schema::defaultStringLength(191);
+                    try {
+                        \App\Utils\Helpers::currency_load();
+                    } catch (\Exception $e) {
+                        // Currency load failed, continue
+                    }
                 }
             } catch (\Exception $exception) {
-
+                // Error loading business settings, use defaults
             }
+            
+            // Always share web_config and language, even if tables don't exist
+            View::share(['web_config' => $web_config, 'language' => $language]);
+            
+            Schema::defaultStringLength(191);
         }
 
         /**
