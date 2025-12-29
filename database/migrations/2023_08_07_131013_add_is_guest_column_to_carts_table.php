@@ -13,19 +13,9 @@ class AddIsGuestColumnToCartsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('carts')) {
-
-            if (Schema::hasTable('carts')) {
-
-
-                Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             $table->tinyInteger('is_guest')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

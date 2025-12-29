@@ -13,19 +13,9 @@ class AddFcmColForDeliveryMan extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('delivery_men')) {
-
-            if (Schema::hasTable('delivery_men')) {
-
-
-                Schema::table('delivery_men', function (Blueprint $table) {
+        Schema::table('delivery_men', function (Blueprint $table) {
             $table->string('fcm_token')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

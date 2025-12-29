@@ -13,13 +13,9 @@ class AddColumnToOrderDetailsStock extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('order_details')) {
-            Schema::table('order_details', function (Blueprint $table) {
-                if (!Schema::hasColumn('order_details', 'is_stock_decreased')) {
-                    $table->boolean('is_stock_decreased')->default(1);
-                }
-            });
-        }
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->boolean('is_stock_decreased')->default(1);
+        });
     }
 
     /**
@@ -29,12 +25,8 @@ class AddColumnToOrderDetailsStock extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('order_details')) {
-            Schema::table('order_details', function (Blueprint $table) {
-                if (Schema::hasColumn('order_details', 'is_stock_decreased')) {
-                    $table->dropColumn('is_stock_decreased');
-                }
-            });
-        }
+        Schema::table('order_details', function (Blueprint $table) {
+            //
+        });
     }
 }

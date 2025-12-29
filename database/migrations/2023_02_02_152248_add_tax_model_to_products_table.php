@@ -13,19 +13,9 @@ class AddTaxModelToProductsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->string('tax_model', 20)->after('tax_type')->default('exclude');
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -36,7 +26,7 @@ class AddTaxModelToProductsTable extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['tax_model']);
+            Schema::dropIfExists('tax_model');
         });
     }
 }

@@ -13,19 +13,9 @@ class AddColCartShopInfo extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('carts')) {
-
-            if (Schema::hasTable('carts')) {
-
-
-                Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             $table->string('shop_info')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

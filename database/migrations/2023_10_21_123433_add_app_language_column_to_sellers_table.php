@@ -13,19 +13,9 @@ class AddAppLanguageColumnToSellersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('sellers')) {
-
-            if (Schema::hasTable('sellers')) {
-
-
-                Schema::table('sellers', function (Blueprint $table) {
+        Schema::table('sellers', function (Blueprint $table) {
             $table->string('app_language')->default('en');
         });
-
-
-            }
-
-        }
     }
 
     /**

@@ -13,20 +13,10 @@ class AddTwoColumnToUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-
-            if (Schema::hasTable('users')) {
-
-
-                Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->float('wallet_balance')->nullable();
             $table->float('loyalty_point')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

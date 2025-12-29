@@ -13,19 +13,9 @@ class AddStatusToAdminsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('admins')) {
-
-            if (Schema::hasTable('admins')) {
-
-
-                Schema::table('admins', function (Blueprint $table) {
+        Schema::table('admins', function (Blueprint $table) {
             $table->boolean('status')->default(1);
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -37,6 +27,6 @@ class AddStatusToAdminsTable extends Migration
     {
         Schema::table('admins', function (Blueprint $table) {
             $table->dropColumn('status');
-        }); 
+        });
     }
 }

@@ -13,20 +13,10 @@ class ChangeColTypeSellerWallet extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('seller_wallets')) {
-
-            if (Schema::hasTable('seller_wallets')) {
-
-
-                Schema::table('seller_wallets', function (Blueprint $table) {
+        Schema::table('seller_wallets', function (Blueprint $table) {
             $table->float('balance')->change();
             $table->float('withdrawn')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

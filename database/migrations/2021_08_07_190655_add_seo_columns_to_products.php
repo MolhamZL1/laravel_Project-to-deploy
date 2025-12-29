@@ -13,22 +13,12 @@ class AddSeoColumnsToProducts extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_image')->nullable();
         });
-
-
-            }
-
-        }
-    }   
+    }
 
     /**
      * Reverse the migrations.

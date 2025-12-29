@@ -17,16 +17,12 @@ class MaintenanceModeMiddleware
      */
     public function handle($request, Closure $next)
     {
-        try {
-            $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
-            if ($maintenance_mode) {
-                if (Auth::guard('admin')->check()) {
-                    return $next($request);
-                }
-                return redirect()->route('maintenance-mode');
+        $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
+        if ($maintenance_mode) {
+            if (Auth::guard('admin')->check()) {
+                return $next($request);
             }
-        } catch (\Exception $e) {
-            // Table doesn't exist yet, continue normally
+            return redirect()->route('maintenance-mode');
         }
         return $next($request);
     }

@@ -13,21 +13,11 @@ class ChangeOrderDetailsPriceCol extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('order_details')) {
-
-            if (Schema::hasTable('order_details')) {
-
-
-                Schema::table('order_details', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             $table->float('price')->change();
             $table->float('tax')->change();
             $table->float('discount')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

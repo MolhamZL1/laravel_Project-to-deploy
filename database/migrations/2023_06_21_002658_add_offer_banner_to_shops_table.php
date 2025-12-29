@@ -13,20 +13,10 @@ class AddOfferBannerToShopsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('shops')) {
-
-            if (Schema::hasTable('shops')) {
-
-
-                Schema::table('shops', function (Blueprint $table) {
+        Schema::table('shops', function (Blueprint $table) {
             //
             $table->string('offer_banner')->after('bottom_banner')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

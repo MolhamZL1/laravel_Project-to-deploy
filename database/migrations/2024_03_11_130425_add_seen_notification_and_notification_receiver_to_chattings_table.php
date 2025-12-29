@@ -11,20 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('chattings')) {
-
-            if (Schema::hasTable('chattings')) {
-
-
-                Schema::table('chattings', function (Blueprint $table) {
+        Schema::table('chattings', function (Blueprint $table) {
             $table->boolean('seen_notification')->after('status')->default(0)->nullable();
             $table->string('notification_receiver', 20)->after('status')->nullable()->comment('admin, seller, customer, deliveryman');
         });
-
-
-            }
-
-        }         
     }
 
     /**

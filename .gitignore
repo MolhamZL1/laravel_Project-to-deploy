@@ -1,51 +1,78 @@
-# Laravel Framework
-/vendor/
-/node_modules/
-/public/hot
-/public/storage
-/storage/*.key
-/storage/app/*
-!/storage/app/.gitkeep
-!/storage/app/public
-/storage/app/public/*
-!/storage/app/public/.gitkeep
-/storage/framework/cache/*
-!/storage/framework/cache/.gitkeep
-/storage/framework/sessions/*
-!/storage/framework/sessions/.gitkeep
-/storage/framework/testing/*
-!/storage/framework/testing/.gitkeep
-/storage/framework/views/*
-!/storage/framework/views/.gitkeep
-/storage/logs/*
-!/storage/logs/.gitkeep
-/storage/debugbar/*
-!/storage/debugbar/.gitkeep
-/bootstrap/cache/*
-!/bootstrap/cache/.gitkeep
+# ===============================
+# Dependencies
+# ===============================
+/vendor
+/node_modules
+/.yarn
+/.pnp
+.pnp.js
+composer.phar
 
-# Environment & Configuration
+# ===============================
+# Environment & Security
+# ===============================
 .env
-.env.backup
-.env.production
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# IDE & Editor Files
-.idea/
-.vscode/
+# ===============================
+# Laravel cache & runtime files
+# ===============================
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/maintenance.php
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/*.key
+/storage/debugbar/*
+!/storage/debugbar/.gitignore
+/storage/data/*
+!/storage/data/.gitignore
+
+# ===============================
+# User uploads (IMPORTANT for 6valley)
+# ===============================
+/storage/app/*
+!/storage/app/public
+!/storage/app/.gitignore
+
+/public/storage
+/public/uploads
+/public/assets/images/uploads
+/public/assets/files
+/public/assets/temp
+
+# ===============================
+# Frontend build files
+# ===============================
+/public/build
+/public/hot
+/public/mix-manifest.json
+
+# ===============================
+# Testing & tools
+# ===============================
+.phpunit.result.cache
+.phpunit.cache
+coverage/
+.nyc_output
+
+# ===============================
+# IDE & OS
+# ===============================
+.idea
+.vscode
 *.swp
 *.swo
 *~
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
-*.code-workspace
-*.iml
-
-# OS Files
 .DS_Store
 .DS_Store?
 ._*
@@ -53,92 +80,25 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-desktop.ini
+Desktop.ini
 
-# Build & Compiled Files
-/public/build/
-/public/mix-manifest.json
-/public/css/
-/public/js/
-npm-debug.log
-yarn-error.log
-yarn.lock
-# Note: package-lock.json is often committed, but you can uncomment the line below if you prefer to ignore it
-# package-lock.json
-
-# Composer
-composer.phar
-# Note: /vendor/ is already ignored above
-# Note: composer.lock should be committed to ensure consistent dependencies
-
-# PHP
-*.php~
-*.php.bak
-*.php.swp
-php.ini
-
-# Testing
-.phpunit.result.cache
-/coverage/
-/.phpunit.cache
-# Note: phpunit.xml should be committed
-
-# Backup Files
-*.bak
-*.backup
-*.old
-*.orig
-backup.json
-/installation/backup/
-*.sql
-*.zip
-*.tar
-*.tar.gz
-
+# ===============================
 # Logs
-*.log
-logs/
-*.log.*
+# ===============================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Cache
-*.cache
-.cache/
-
-# Temporary Files
-tmp/
-temp/
-*.tmp
-*.temp
-
-# Laravel Telescope (if used)
-/telescope/
-
-# Laravel Horizon (if used)
-/horizon/
-
-# User Uploads (keep structure but ignore content)
-/storage/app/public/brand/*
-!/storage/app/public/brand/.gitkeep
-/storage/app/public/category/*
-!/storage/app/public/category/.gitkeep
-/storage/app/public/product/*
-!/storage/app/public/product/.gitkeep
-/storage/app/public/seller/*
-!/storage/app/public/seller/.gitkeep
-/storage/app/public/shop/*
-!/storage/app/public/shop/.gitkeep
-
-# Data files
-/storage/data/*
-!/storage/data/.gitkeep
-
-# Railway/Deployment specific
-.railway/
-
-# Misc
-*.zip~
-*.zip
-*.rar
-*.7z
-
-
+# ===============================
+# Project-specific files
+# ===============================
+php.ini
+backup.json
+mySpecs.html
+auto_builder_sh.sh
+sitemap.xml
+modules_statuses.json
+installation/backup/*
+!/installation/backup/.gitignore

@@ -13,12 +13,7 @@ class AddColToSellerWallet extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('seller_wallets')) {
-
-            if (Schema::hasTable('seller_wallets')) {
-
-
-                Schema::table('seller_wallets', function (Blueprint $table) {
+        Schema::table('seller_wallets', function (Blueprint $table) {
             $table->float('commission_given')->default(0);
             $table->float('total_earning')->default(0);
             $table->float('pending_withdraw')->default(0);
@@ -26,11 +21,6 @@ class AddColToSellerWallet extends Migration
             $table->float('delivery_charge_earned')->default(0);
             $table->float('collected_cash')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

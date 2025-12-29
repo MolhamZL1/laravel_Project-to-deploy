@@ -11,20 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->longText('digital_product_file_types')->nullable()->after('variation');
             $table->longText('digital_product_extensions')->nullable()->after('digital_product_file_types');
         });
-
-
-            }
-
-        }
     }
 
     /**

@@ -13,19 +13,9 @@ class ChangeColTypeTranslation extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('translations')) {
-
-            if (Schema::hasTable('translations')) {
-
-
-                Schema::table('translations', function (Blueprint $table) {
+        Schema::table('translations', function (Blueprint $table) {
             $table->dropColumn('id');
         });
-
-
-            }
-
-        }
     }
 
     /**

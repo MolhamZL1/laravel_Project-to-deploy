@@ -13,19 +13,9 @@ class AddIsShippingFreeToOrdersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->boolean('is_shipping_free')->after('shipping_cost')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

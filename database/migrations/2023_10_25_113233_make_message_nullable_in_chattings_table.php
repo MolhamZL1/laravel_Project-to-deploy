@@ -13,19 +13,9 @@ class MakeMessageNullableInChattingsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('chattings')) {
-
-            if (Schema::hasTable('chattings')) {
-
-
-                Schema::table('chattings', function (Blueprint $table) {
+        Schema::table('chattings', function (Blueprint $table) {
             $table->text('message')->nullable()->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

@@ -13,19 +13,9 @@ class ChangeIdToTransactionsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('transactions')) {
-
-            if (Schema::hasTable('transactions')) {
-
-
-                Schema::table('transactions', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->increments('id')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

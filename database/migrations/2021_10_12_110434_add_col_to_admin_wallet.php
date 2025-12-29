@@ -13,22 +13,12 @@ class AddColToAdminWallet extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('admin_wallets')) {
-
-            if (Schema::hasTable('admin_wallets')) {
-
-
-                Schema::table('admin_wallets', function (Blueprint $table) {
+        Schema::table('admin_wallets', function (Blueprint $table) {
             $table->float('commission_earned')->default(0);
             $table->float('inhouse_sell')->default(0);
             $table->float('delivery_charge_earned')->default(0);
             $table->float('pending_amount')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

@@ -13,19 +13,9 @@ class ChangeColTypeTranslation1 extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('translations')) {
-
-            if (Schema::hasTable('translations')) {
-
-
-                Schema::table('translations', function (Blueprint $table) {
+        Schema::table('translations', function (Blueprint $table) {
             $table->bigIncrements('id');
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -38,5 +28,5 @@ class ChangeColTypeTranslation1 extends Migration
         Schema::table('translations', function (Blueprint $table) {
             //
         });
-    }   
+    }
 }

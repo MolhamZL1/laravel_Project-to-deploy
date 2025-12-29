@@ -13,19 +13,9 @@ class AddDelivermanIdCloumnToReviewsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('reviews')) {
-
-            if (Schema::hasTable('reviews')) {
-
-
-                Schema::table('reviews', function (Blueprint $table) {
+        Schema::table('reviews', function (Blueprint $table) {
             $table->bigInteger('delivery_man_id')->nullable()->after('customer_id');
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -37,6 +27,6 @@ class AddDelivermanIdCloumnToReviewsTable extends Migration
     {
         Schema::table('reviews', function (Blueprint $table) {
             $table->dropColumn('delivery_man_id');
-        }); 
+        });
     }
 }

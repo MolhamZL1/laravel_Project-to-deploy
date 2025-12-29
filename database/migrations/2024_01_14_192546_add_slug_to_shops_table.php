@@ -11,19 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('shops')) {
-
-            if (Schema::hasTable('shops')) {
-
-
-                Schema::table('shops', function (Blueprint $table) {
+        Schema::table('shops', function (Blueprint $table) {
             $table->string('slug')->default('en')->after('name');
         });
-
-
-            }
-
-        }
     }
 
     /**

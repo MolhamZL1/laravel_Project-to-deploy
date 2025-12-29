@@ -11,19 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('brands')) {
-
-            if (Schema::hasTable('brands')) {
-
-
-                Schema::table('brands', function (Blueprint $table) {
+        Schema::table('brands', function (Blueprint $table) {
             $table->string('image_storage_type',10)->default('public')->after('image')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

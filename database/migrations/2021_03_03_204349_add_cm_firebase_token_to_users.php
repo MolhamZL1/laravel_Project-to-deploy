@@ -13,13 +13,9 @@ class AddCmFirebaseTokenToUsers extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                if (!Schema::hasColumn('users', 'cm_firebase_token')) {
-                    $table->string('cm_firebase_token')->nullable();
-                }
-            });
-        }
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('cm_firebase_token')->nullable();
+        });
     }
 
     /**
@@ -29,12 +25,8 @@ class AddCmFirebaseTokenToUsers extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                if (Schema::hasColumn('users', 'cm_firebase_token')) {
-                    $table->dropColumn(['cm_firebase_token']);
-                }
-            });
-        }
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }

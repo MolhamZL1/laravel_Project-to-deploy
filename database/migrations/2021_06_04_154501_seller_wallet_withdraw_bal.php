@@ -13,16 +13,10 @@ class SellerWalletWithdrawBal extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('seller_wallets')) {
-            Schema::table('seller_wallets', function (Blueprint $table) {
-                if (Schema::hasColumn('seller_wallets', 'withdrawn')) {
-                    $table->string('withdrawn')->change();
-                }
-                if (Schema::hasColumn('seller_wallets', 'balance')) {
-                    $table->string('balance')->change();
-                }
-            });
-        }
+        Schema::table('seller_wallets', function (Blueprint $table) {
+            $table->string('withdrawn')->change();
+            $table->string('balance')->change();
+        });
     }
 
     /**
@@ -32,10 +26,8 @@ class SellerWalletWithdrawBal extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('seller_wallets')) {
-            Schema::table('seller_wallets', function (Blueprint $table) {
-                // Reverting column type changes is complex
-            });
-        }
+        Schema::table('seller_wallets', function (Blueprint $table) {
+            //
+        });
     }
 }

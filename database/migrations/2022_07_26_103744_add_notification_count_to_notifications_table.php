@@ -13,19 +13,9 @@ class AddNotificationCountToNotificationsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('notifications')) {
-
-            if (Schema::hasTable('notifications')) {
-
-
-                Schema::table('notifications', function (Blueprint $table) {
+        Schema::table('notifications', function (Blueprint $table) {
             $table->integer('notification_count')->after('description')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

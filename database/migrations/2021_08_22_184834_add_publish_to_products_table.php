@@ -13,20 +13,10 @@ class AddPublishToProductsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->boolean('request_status')->default(0);
             $table->string('denied_note')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

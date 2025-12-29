@@ -11,20 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('refund_requests')) {
-
-            if (Schema::hasTable('refund_requests')) {
-
-
-                Schema::table('refund_requests', function (Blueprint $table) {
+        Schema::table('refund_requests', function (Blueprint $table) {
             $table->tinyInteger('approved_count')->after('status')->default(0);
             $table->tinyInteger('denied_count')->after('approved_count')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

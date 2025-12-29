@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,11 +62,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Force HTTPS URLs in production (Railway serves over HTTPS)
-        if (app()->environment('production') || app()->environment('staging')) {
-            URL::forceScheme('https');
-        }
-        
         if (!App::runningInConsole()) {
             Paginator::useBootstrap();
 
@@ -76,28 +70,6 @@ class AppServiceProvider extends ServiceProvider
 
             Config::set('get_theme_routes', $this->get_theme_routes());
 
-            // Initialize default web_config
-            $web_config = [
-                'primary_color' => '#007bff',
-                'secondary_color' => '#6c757d',
-                'primary_color_light' => '',
-                'name' => (object)['value' => 'Company'],
-                'phone' => (object)['value' => ''],
-                'web_logo' => null,
-                'mob_logo' => null,
-                'fav_icon' => null,
-                'email' => (object)['value' => ''],
-                'about' => (object)['value' => ''],
-                'footer_logo' => null,
-                'copyright_text' => (object)['value' => ''],
-                'decimal_point_settings' => 0,
-                'seller_registration' => '0',
-                'wallet_status' => 0,
-                'loyalty_point_status' => 0,
-                'guest_checkout_status' => 0,
-            ];
-            $language = null;
-            
             try {
                 if (Schema::hasTable('business_settings')) {
 
@@ -115,23 +87,23 @@ class AppServiceProvider extends ServiceProvider
                     }
 
                     $web_config = [
-                        'primary_color' => $data['primary'] ?? '#007bff',
-                        'secondary_color' => $data['secondary'] ?? '#6c757d',
+                        'primary_color' => $data['primary'],
+                        'secondary_color' => $data['secondary'],
                         'primary_color_light' => isset($data['primary_light']) ? $data['primary_light'] : '',
-                        'name' => Helpers::get_settings($web, 'company_name') ?? (object)['value' => 'Company'],
-                        'phone' => Helpers::get_settings($web, 'company_phone') ?? (object)['value' => ''],
+                        'name' => Helpers::get_settings($web, 'company_name'),
+                        'phone' => Helpers::get_settings($web, 'company_phone'),
                         'web_logo' => getWebConfig('company_web_logo'),
                         'mob_logo' => getWebConfig( 'company_mobile_logo'),
                         'fav_icon' => getWebConfig( 'company_fav_icon'),
-                        'email' => Helpers::get_settings($web, 'company_email') ?? (object)['value' => ''],
-                        'about' => Helpers::get_settings($web, 'about_us') ?? (object)['value' => ''],
+                        'email' => Helpers::get_settings($web, 'company_email'),
+                        'about' => Helpers::get_settings($web, 'about_us'),
                         'footer_logo' => getWebConfig('company_footer_logo'),
-                        'copyright_text' => Helpers::get_settings($web, 'company_copyright_text') ?? (object)['value' => ''],
+                        'copyright_text' => Helpers::get_settings($web, 'company_copyright_text'),
                         'decimal_point_settings' => !empty(\App\Utils\Helpers::get_business_settings('decimal_point_settings')) ? \App\Utils\Helpers::get_business_settings('decimal_point_settings') : 0,
-                        'seller_registration' => BusinessSetting::where(['type' => 'seller_registration'])->first()->value ?? '0',
-                        'wallet_status' => Helpers::get_business_settings('wallet_status') ?? 0,
-                        'loyalty_point_status' => Helpers::get_business_settings('loyalty_point_status') ?? 0,
-                        'guest_checkout_status' => Helpers::get_business_settings('guest_checkout') ?? 0,
+                        'seller_registration' => BusinessSetting::where(['type' => 'seller_registration'])->first()->value,
+                        'wallet_status' => Helpers::get_business_settings('wallet_status'),
+                        'loyalty_point_status' => Helpers::get_business_settings('loyalty_point_status'),
+                        'guest_checkout_status' => Helpers::get_business_settings('guest_checkout'),
                     ];
 
                     if ((!Request::is('admin') && !Request::is('admin/*') && !Request::is('seller/*') && !Request::is('vendor/*')) || Request::is('vendor/auth/registration/*') ) {
@@ -229,20 +201,15 @@ class AppServiceProvider extends ServiceProvider
                     $language = BusinessSetting::where('type', 'language')->first();
 
                     //currency
-                    try {
-                        \App\Utils\Helpers::currency_load();
-                    } catch (\Exception $e) {
-                        // Currency load failed, continue
-                    }
+                    \App\Utils\Helpers::currency_load();
+
+                    View::share(['web_config' => $web_config, 'language' => $language]);
+
+                    Schema::defaultStringLength(191);
                 }
             } catch (\Exception $exception) {
-                // Error loading business settings, use defaults
+
             }
-            
-            // Always share web_config and language, even if tables don't exist
-            View::share(['web_config' => $web_config, 'language' => $language]);
-            
-            Schema::defaultStringLength(191);
         }
 
         /**

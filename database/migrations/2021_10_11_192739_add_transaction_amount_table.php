@@ -13,20 +13,10 @@ class AddTransactionAmountTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('transactions')) {
-
-            if (Schema::hasTable('transactions')) {
-
-
-                Schema::table('transactions', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->float('amount')->default(0);
             $table->string('transaction_type')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

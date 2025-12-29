@@ -13,22 +13,12 @@ class AddFourColumnToProductsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->float('shipping_cost')->nullable();
             $table->boolean('multiply_qty')->nullable();
             $table->float('temp_shipping_cost')->nullable();
             $table->boolean('is_shipping_cost_updated')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

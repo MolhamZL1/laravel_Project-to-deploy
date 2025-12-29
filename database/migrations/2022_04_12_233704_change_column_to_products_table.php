@@ -13,19 +13,9 @@ class ChangeColumnToProductsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('products')) {
-
-            if (Schema::hasTable('products')) {
-
-
-                Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->longText('images')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

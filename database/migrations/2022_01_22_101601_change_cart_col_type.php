@@ -13,21 +13,11 @@ class ChangeCartColType extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('carts')) {
-
-            if (Schema::hasTable('carts')) {
-
-
-                Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             $table->float('price')->change();
             $table->float('tax')->change();
             $table->float('discount')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

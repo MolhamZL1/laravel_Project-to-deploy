@@ -13,13 +13,9 @@ class AmountWithdrawReq extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('withdraw_requests')) {
-            Schema::table('withdraw_requests', function (Blueprint $table) {
-                if (Schema::hasColumn('withdraw_requests', 'amount')) {
-                    $table->string('amount')->change();
-                }
-            });
-        }
+        Schema::table('withdraw_requests', function (Blueprint $table) {
+            $table->string('amount')->change();
+        });
     }
 
     /**
@@ -29,10 +25,8 @@ class AmountWithdrawReq extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('withdraw_requests')) {
-            Schema::table('withdraw_requests', function (Blueprint $table) {
-                // Reverting column type changes is complex
-            });
-        }
+        Schema::table('withdraw_requests', function (Blueprint $table) {
+            //
+        });
     }
 }

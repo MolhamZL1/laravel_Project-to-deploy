@@ -13,21 +13,11 @@ class UpdateStringLimit extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->string('order_status',50)->change();
             $table->string('payment_method',100)->change();
             $table->float('order_amount')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -39,6 +29,6 @@ class UpdateStringLimit extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             //
-        });   
+        });
     }
 }

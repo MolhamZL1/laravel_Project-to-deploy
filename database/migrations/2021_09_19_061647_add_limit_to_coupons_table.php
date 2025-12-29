@@ -13,19 +13,9 @@ class AddLimitToCouponsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('coupons')) {
-
-            if (Schema::hasTable('coupons')) {
-
-
-                Schema::table('coupons', function (Blueprint $table) {
+        Schema::table('coupons', function (Blueprint $table) {
             $table->integer('limit')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

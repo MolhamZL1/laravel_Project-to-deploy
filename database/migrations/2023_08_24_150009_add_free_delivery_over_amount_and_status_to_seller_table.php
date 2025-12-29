@@ -13,20 +13,10 @@ class AddFreeDeliveryOverAmountAndStatusToSellerTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('sellers')) {
-
-            if (Schema::hasTable('sellers')) {
-
-
-                Schema::table('sellers', function (Blueprint $table) {
+        Schema::table('sellers', function (Blueprint $table) {
             $table->integer('free_delivery_status')->after('minimum_order_amount')->default(0);
             $table->float('free_delivery_over_amount')->after('free_delivery_status')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**

@@ -13,19 +13,9 @@ class AddBottomBannerToShopsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('shops')) {
-
-            if (Schema::hasTable('shops')) {
-
-
-                Schema::table('shops', function (Blueprint $table) {
+        Schema::table('shops', function (Blueprint $table) {
             $table->string('bottom_banner')->after('image')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -36,7 +26,7 @@ class AddBottomBannerToShopsTable extends Migration
     public function down()
     {
         Schema::table('shops', function (Blueprint $table) {
-            $table->dropColumn(['bottom_banner']);
+            Schema::dropIfExists('bottom_banner');
         });
     }
 }

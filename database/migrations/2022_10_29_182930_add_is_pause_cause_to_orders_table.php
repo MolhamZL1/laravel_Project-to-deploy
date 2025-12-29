@@ -13,20 +13,10 @@ class AddIsPauseCauseToOrdersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->string('is_pause', 20)->default(0)->after('order_amount');
             $table->string('cause')->nullable()->after('is_pause');
         });
-
-
-            }
-
-        }
     }
 
     /**

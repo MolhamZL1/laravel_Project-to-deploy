@@ -13,19 +13,9 @@ class AddColToContact extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('contacts')) {
-
-            if (Schema::hasTable('contacts')) {
-
-
-                Schema::table('contacts', function (Blueprint $table) {
+        Schema::table('contacts', function (Blueprint $table) {
             $table->longText('reply')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

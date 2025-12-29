@@ -13,22 +13,12 @@ class AddAddressPhoneCountryCodeColumnToDeliveryMenTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('delivery_men')) {
-
-            if (Schema::hasTable('delivery_men')) {
-
-
-                Schema::table('delivery_men', function (Blueprint $table) {
+        Schema::table('delivery_men', function (Blueprint $table) {
             $table->text('address')->after('l_name')->nullable();
             $table->string('country_code', 20)->after('address')->nullable();
             $table->tinyInteger('is_online')->default(1)->after('is_active');
             $table->dropUnique(['phone']);
         });
-
-
-            }
-
-        }
     }
 
     /**

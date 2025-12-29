@@ -13,21 +13,11 @@ class AddLoginHitCountAndIsTempBlockedAndTempBlockTimeToPasswordResetsTable exte
      */
     public function up()
     {
-        if (Schema::hasTable('password_resets')) {
-
-            if (Schema::hasTable('password_resets')) {
-
-
-                Schema::table('password_resets', function (Blueprint $table) {
+        Schema::table('password_resets', function (Blueprint $table) {
             $table->tinyInteger('otp_hit_count')->default('0')->after('token');
             $table->boolean('is_temp_blocked')->default('0')->after('otp_hit_count');
             $table->timestamp('temp_block_time')->nullable()->after('is_temp_blocked');
         });
-
-
-            }
-
-        }
     }
 
     /**

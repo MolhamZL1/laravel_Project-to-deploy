@@ -13,19 +13,9 @@ class AddRefundIdToRefundTransactionsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('refund_transactions')) {
-
-            if (Schema::hasTable('refund_transactions')) {
-
-
-                Schema::table('refund_transactions', function (Blueprint $table) {
+        Schema::table('refund_transactions', function (Blueprint $table) {
             $table->unsignedBigInteger('refund_id')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

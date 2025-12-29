@@ -11,19 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('brands')) {
-
-            if (Schema::hasTable('brands')) {
-
-
-                Schema::table('brands', function (Blueprint $table) {
+        Schema::table('brands', function (Blueprint $table) {
             $table->string('image_alt_text')->nullable()->after('image');
         });
-
-
-            }
-
-        }
     }
 
     /**

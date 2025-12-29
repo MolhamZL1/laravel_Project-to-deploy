@@ -13,19 +13,9 @@ class AddIdColOrderTran extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('order_transactions')) {
-
-            if (Schema::hasTable('order_transactions')) {
-
-
-                Schema::table('order_transactions', function (Blueprint $table) {
+        Schema::table('order_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
         });
-
-
-            }
-
-        }
     }
 
     /**

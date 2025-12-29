@@ -5,7 +5,6 @@ namespace App\Utils;
 use App\Utils\Helpers;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Support\Facades\Schema;
 
 class CategoryManager
 {
@@ -70,30 +69,21 @@ class CategoryManager
 
     public static function getCategoriesWithCountingAndPriorityWiseSorting($dataLimit = null)
     {
-        try {
-            if (!\Illuminate\Support\Facades\Schema::hasTable('categories')) {
-                return collect([]);
-            }
-            
-            $categories = Category::with(['product' => function ($query) {
-                    return $query->active()->withCount(['orderDetails']);
-                }])->withCount(['product' => function ($query) {
-                    $query->active();
-                }])->with(['childes' => function ($query) {
-                $query->with(['childes' => function ($query) {
-                    $query->withCount(['subSubCategoryProduct'])->where('position', 2);
-                }])->withCount(['subCategoryProduct'])->where('position', 1);
-            }, 'childes.childes'])->where('position', 0);
+        $categories = Category::with(['product' => function ($query) {
+                return $query->active()->withCount(['orderDetails']);
+            }])->withCount(['product' => function ($query) {
+                $query->active();
+            }])->with(['childes' => function ($query) {
+            $query->with(['childes' => function ($query) {
+                $query->withCount(['subSubCategoryProduct'])->where('position', 2);
+            }])->withCount(['subCategoryProduct'])->where('position', 1);
+        }, 'childes.childes'])->where('position', 0);
 
-            $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
-            if ($dataLimit) {
-                $categoriesProcessed = $categoriesProcessed->paginate($dataLimit);
-            }
-            return $categoriesProcessed;
-        } catch (\Exception $e) {
-            // Table doesn't exist yet, return empty collection
-            return collect([]);
+        $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
+        if ($dataLimit) {
+            $categoriesProcessed = $categoriesProcessed->paginate($dataLimit);
         }
+        return $categoriesProcessed;
     }
 
     public static function getPriorityWiseCategorySortQuery($query)

@@ -13,20 +13,10 @@ class AddCouponDiscountBearerAndAdminCommissionToOrders extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->string('coupon_discount_bearer')->after('coupon_code')->default('inhouse');
             $table->decimal('admin_commission')->after('order_amount')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -37,8 +27,8 @@ class AddCouponDiscountBearerAndAdminCommissionToOrders extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn(['coupon_discount_bearer']);
-            $table->dropColumn(['admin_commission']);
+            Schema::dropIfExists('coupon_discount_bearer');
+            Schema::dropIfExists('admin_commission');
         });
     }
 }

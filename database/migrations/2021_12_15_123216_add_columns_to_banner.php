@@ -13,20 +13,10 @@ class AddColumnsToBanner extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('banners')) {
-
-            if (Schema::hasTable('banners')) {
-
-
-                Schema::table('banners', function (Blueprint $table) {
+        Schema::table('banners', function (Blueprint $table) {
             $table->string('resource_type')->nullable();
             $table->bigInteger('resource_id')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

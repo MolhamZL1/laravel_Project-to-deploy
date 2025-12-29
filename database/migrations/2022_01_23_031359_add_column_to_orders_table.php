@@ -13,21 +13,11 @@ class AddColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->string('order_type')->default('default_type');
             $table->float('extra_discount')->default(0);
             $table->string('extra_discount_type')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

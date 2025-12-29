@@ -13,19 +13,9 @@ class ChangeColTypeAdminEarningHistory extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('admin_wallet_histories')) {
-
-            if (Schema::hasTable('admin_wallet_histories')) {
-
-
-                Schema::table('admin_wallet_histories', function (Blueprint $table) {
+        Schema::table('admin_wallet_histories', function (Blueprint $table) {
             $table->float('amount')->change();
         });
-
-
-            }
-
-        }
     }
 
     /**

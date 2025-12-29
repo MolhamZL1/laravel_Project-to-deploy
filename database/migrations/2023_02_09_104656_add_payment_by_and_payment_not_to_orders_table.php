@@ -13,20 +13,10 @@ class AddPaymentByAndPaymentNotToOrdersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->string('payment_by')->after('transaction_ref')->nullable();
             $table->text('payment_note')->after('payment_by')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -37,8 +27,8 @@ class AddPaymentByAndPaymentNotToOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn(['payment_by']);
-            $table->dropColumn(['payment_note']);
+            Schema::dropIfExists('payment_by');
+            Schema::dropIfExists('payment_note');
         });
     }
 }

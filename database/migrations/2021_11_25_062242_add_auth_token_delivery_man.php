@@ -13,19 +13,9 @@ class AddAuthTokenDeliveryMan extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('delivery_men')) {
-
-            if (Schema::hasTable('delivery_men')) {
-
-
-                Schema::table('delivery_men', function (Blueprint $table) {
+        Schema::table('delivery_men', function (Blueprint $table) {
             $table->string('auth_token')->default(\Illuminate\Support\Str::random(40));
         });
-
-
-            }
-
-        }
     }
 
     /**

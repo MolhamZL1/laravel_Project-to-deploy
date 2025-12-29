@@ -13,19 +13,9 @@ class AddUserTableEmailVerified extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-
-            if (Schema::hasTable('users')) {
-
-
-                Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_email_verified')->default(0);
         });
-
-
-            }
-
-        }
     }
 
     /**
@@ -38,5 +28,5 @@ class AddUserTableEmailVerified extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
         });
-    }   
+    }
 }

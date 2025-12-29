@@ -13,20 +13,10 @@ class AddReferralCodeAndReferredByToUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-
-            if (Schema::hasTable('users')) {
-
-
-                Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->string('referral_code')->after('temp_block_time')->nullable();
             $table->integer('referred_by')->after('referral_code')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**

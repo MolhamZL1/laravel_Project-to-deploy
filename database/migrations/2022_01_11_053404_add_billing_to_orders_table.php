@@ -13,20 +13,10 @@ class AddBillingToOrdersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('orders')) {
-
-            if (Schema::hasTable('orders')) {
-
-
-                Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->unsignedBigInteger('billing_address')->nullable();
             $table->string('billing_address_data')->nullable();
         });
-
-
-            }
-
-        }
     }
 
     /**
