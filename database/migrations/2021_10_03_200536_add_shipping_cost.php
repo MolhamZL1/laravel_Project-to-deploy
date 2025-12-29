@@ -13,9 +13,19 @@ class AddShippingCost extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        if (Schema::hasTable('orders')) {
+
+            if (Schema::hasTable('orders')) {
+
+
+                Schema::table('orders', function (Blueprint $table) {
             $table->float('shipping_cost')->default(0);
         });
+
+
+            }
+
+        }
     }
 
     /**

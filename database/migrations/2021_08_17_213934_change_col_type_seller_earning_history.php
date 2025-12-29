@@ -13,9 +13,19 @@ class ChangeColTypeSellerEarningHistory extends Migration
      */
     public function up()
     {
-        Schema::table('seller_wallet_histories', function (Blueprint $table) {
+        if (Schema::hasTable('seller_wallet_histories')) {
+
+            if (Schema::hasTable('seller_wallet_histories')) {
+
+
+                Schema::table('seller_wallet_histories', function (Blueprint $table) {
             $table->float('amount')->change();
         });
+
+
+            }
+
+        }
     }
 
     /**

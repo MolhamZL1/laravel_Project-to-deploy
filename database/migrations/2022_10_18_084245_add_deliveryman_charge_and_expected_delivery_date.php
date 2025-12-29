@@ -13,10 +13,20 @@ class AddDeliverymanChargeAndExpectedDeliveryDate extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        if (Schema::hasTable('orders')) {
+
+            if (Schema::hasTable('orders')) {
+
+
+                Schema::table('orders', function (Blueprint $table) {
             $table->double('deliveryman_charge',50)->default(0)->after('delivery_man_id');
             $table->date('expected_delivery_date')->nullable()->after('deliveryman_charge');
         });
+
+
+            }
+
+        }
     }
 
     /**

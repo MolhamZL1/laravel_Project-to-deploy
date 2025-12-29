@@ -13,9 +13,19 @@ class AddExpiresAtToPhoneOrEmailVerifications extends Migration
      */
     public function up()
     {
-        Schema::table('phone_or_email_verifications', function (Blueprint $table) {
+        if (Schema::hasTable('phone_or_email_verifications')) {
+
+            if (Schema::hasTable('phone_or_email_verifications')) {
+
+
+                Schema::table('phone_or_email_verifications', function (Blueprint $table) {
             $table->timestamp('expires_at')->after('token')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

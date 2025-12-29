@@ -13,12 +13,22 @@ class AddTitleAndSubtitleAndBackgroundColorAndButtonTextToBannersTable extends M
      */
     public function up()
     {
-        Schema::table('banners', function (Blueprint $table) {
+        if (Schema::hasTable('banners')) {
+
+            if (Schema::hasTable('banners')) {
+
+
+                Schema::table('banners', function (Blueprint $table) {
             $table->string('title')->after('resource_id')->nullable();
             $table->string('sub_title')->after('title')->nullable();
             $table->string('button_text')->after('sub_title')->nullable();
             $table->string('background_color')->after('button_text')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**
@@ -29,10 +39,10 @@ class AddTitleAndSubtitleAndBackgroundColorAndButtonTextToBannersTable extends M
     public function down()
     {
         Schema::table('banners', function (Blueprint $table) {
-            Schema::dropIfExists('title');
-            Schema::dropIfExists('sub_title');
-            Schema::dropIfExists('button_text');
-            Schema::dropIfExists('background_color');
+            $table->dropColumn(['title']);
+            $table->dropColumn(['sub_title']);
+            $table->dropColumn(['button_text']);
+            $table->dropColumn(['background_color']);
         });
     }
 }

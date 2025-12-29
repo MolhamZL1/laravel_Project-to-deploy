@@ -13,9 +13,13 @@ class AddActiveColUserTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_active')->default(1);
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'is_active')) {
+                    $table->boolean('is_active')->default(1);
+                }
+            });
+        }
     }
 
     /**
@@ -25,8 +29,12 @@ class AddActiveColUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'is_active')) {
+                    $table->dropColumn(['is_active']);
+                }
+            });
+        }
     }
 }

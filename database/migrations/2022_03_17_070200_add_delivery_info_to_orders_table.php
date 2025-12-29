@@ -13,11 +13,21 @@ class AddDeliveryInfoToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        if (Schema::hasTable('orders')) {
+
+            if (Schema::hasTable('orders')) {
+
+
+                Schema::table('orders', function (Blueprint $table) {
             $table->string('delivery_type')->nullable();
             $table->string('delivery_service_name')->nullable();
             $table->string('third_party_delivery_tracking_id')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

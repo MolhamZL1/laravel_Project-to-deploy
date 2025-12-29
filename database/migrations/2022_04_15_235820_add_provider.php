@@ -14,9 +14,19 @@ class AddProvider extends Migration
     public function up()
     {
         if (!Schema::hasColumn('oauth_clients', 'provider')) {
-            Schema::table('oauth_clients', function (Blueprint $table) {
+            if (Schema::hasTable('oauth_clients')) {
+
+                if (Schema::hasTable('oauth_clients')) {
+
+
+                    Schema::table('oauth_clients', function (Blueprint $table) {
                 $table->string('provider')->nullable();
             });
+
+
+                }
+
+            }
         }
     }
 

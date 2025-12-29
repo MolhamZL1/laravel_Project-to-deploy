@@ -13,9 +13,19 @@ class RemoveColFromSellerWallet extends Migration
      */
     public function up()
     {
-        Schema::table('seller_wallets', function (Blueprint $table) {
+        if (Schema::hasTable('seller_wallets')) {
+
+            if (Schema::hasTable('seller_wallets')) {
+
+
+                Schema::table('seller_wallets', function (Blueprint $table) {
             $table->dropColumn('total_withdraw');
         });
+
+
+            }
+
+        }
     }
 
     /**

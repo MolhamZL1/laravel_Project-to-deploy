@@ -13,9 +13,19 @@ class AddAttachmentColumnToChattingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('chattings', function (Blueprint $table) {
+        if (Schema::hasTable('chattings')) {
+
+            if (Schema::hasTable('chattings')) {
+
+
+                Schema::table('chattings', function (Blueprint $table) {
             $table->json('attachment')->after('message')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -13,9 +13,13 @@ class ExRateUpdate extends Migration
      */
     public function up()
     {
-        Schema::table('currencies', function (Blueprint $table) {
-            $table->string('exchange_rate')->change();
-        });
+        if (Schema::hasTable('currencies')) {
+            Schema::table('currencies', function (Blueprint $table) {
+                if (Schema::hasColumn('currencies', 'exchange_rate')) {
+                    $table->string('exchange_rate')->change();
+                }
+            });
+        }
     }
 
     /**
@@ -25,8 +29,10 @@ class ExRateUpdate extends Migration
      */
     public function down()
     {
-        Schema::table('currencies', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('currencies')) {
+            Schema::table('currencies', function (Blueprint $table) {
+                // Reverting column type changes is complex, leaving empty
+            });
+        }
     }
 }

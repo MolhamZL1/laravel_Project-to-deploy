@@ -13,9 +13,19 @@ class AddProductTypeAndDigitalProductTypeAndDigitalFileToOrderDetails extends Mi
      */
     public function up()
     {
-        Schema::table('order_details', function (Blueprint $table) {
+        if (Schema::hasTable('order_details')) {
+
+            if (Schema::hasTable('order_details')) {
+
+
+                Schema::table('order_details', function (Blueprint $table) {
             $table->string('digital_file_after_sell')->after('seller_id')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

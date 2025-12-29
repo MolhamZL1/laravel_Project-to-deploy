@@ -13,12 +13,22 @@ class AddMultipleColumnToRefundRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::table('refund_requests', function (Blueprint $table) {
+        if (Schema::hasTable('refund_requests')) {
+
+            if (Schema::hasTable('refund_requests')) {
+
+
+                Schema::table('refund_requests', function (Blueprint $table) {
             $table->longText('approved_note')->nullable();
             $table->longText('rejected_note')->nullable();
             $table->longText('payment_info')->nullable();
             $table->string('change_by')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

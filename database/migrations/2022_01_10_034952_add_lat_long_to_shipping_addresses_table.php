@@ -13,10 +13,20 @@ class AddLatLongToShippingAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
+        if (Schema::hasTable('shipping_addresses')) {
+
+            if (Schema::hasTable('shipping_addresses')) {
+
+
+                Schema::table('shipping_addresses', function (Blueprint $table) {
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

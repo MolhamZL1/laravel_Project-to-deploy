@@ -13,9 +13,19 @@ class AddShippingToCartsTable extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
+        if (Schema::hasTable('carts')) {
+
+            if (Schema::hasTable('carts')) {
+
+
+                Schema::table('carts', function (Blueprint $table) {
             $table->float('shipping_cost')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

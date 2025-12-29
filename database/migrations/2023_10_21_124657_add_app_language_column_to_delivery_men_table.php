@@ -13,9 +13,19 @@ class AddAppLanguageColumnToDeliveryMenTable extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_men', function (Blueprint $table) {
+        if (Schema::hasTable('delivery_men')) {
+
+            if (Schema::hasTable('delivery_men')) {
+
+
+                Schema::table('delivery_men', function (Blueprint $table) {
             $table->string('app_language')->default('en');
         });
+
+
+            }
+
+        }
     }
 
     /**

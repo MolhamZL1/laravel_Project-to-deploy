@@ -13,9 +13,19 @@ class AddAttachmentColumnToSupportTicketConvsTable extends Migration
      */
     public function up()
     {
-        Schema::table('support_ticket_convs', function (Blueprint $table) {
+        if (Schema::hasTable('support_ticket_convs')) {
+
+            if (Schema::hasTable('support_ticket_convs')) {
+
+
+                Schema::table('support_ticket_convs', function (Blueprint $table) {
             $table->json('attachment')->after('customer_message')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

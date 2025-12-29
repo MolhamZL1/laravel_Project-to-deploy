@@ -17,6 +17,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ProductManager
 {
@@ -1308,27 +1309,43 @@ class ProductManager
 
     public static function getPriorityWiseFlashDealsProductsQuery($id = null, $userId = null): array
     {
-        $flashDeal = FlashDeal::where(['deal_type' => 'flash_deal', 'status' => 1])
-            ->when($id, function ($query) use ($id) {
-                return $query->where(['id' => $id]);
-            })
-            ->whereDate('start_date', '<=', date('Y-m-d'))
-            ->whereDate('end_date', '>=', date('Y-m-d'))
-            ->withCount(['products'])
-            ->first();
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('flash_deals') || 
+                !\Illuminate\Support\Facades\Schema::hasTable('flash_deal_products')) {
+                return [
+                    'flashDeal' => null,
+                    'flashDealProducts' => null,
+                ];
+            }
+            
+            $flashDeal = FlashDeal::where(['deal_type' => 'flash_deal', 'status' => 1])
+                ->when($id, function ($query) use ($id) {
+                    return $query->where(['id' => $id]);
+                })
+                ->whereDate('start_date', '<=', date('Y-m-d'))
+                ->whereDate('end_date', '>=', date('Y-m-d'))
+                ->withCount(['products'])
+                ->first();
 
-        if ($flashDeal) {
-            $flashDealProducts = ProductManager::getPriorityWiseFlashDealsProductsQuerySorting(
-                query: Product::active(),
-                flashDeal: $flashDeal,
-                userId: $userId,
-            );
+            if ($flashDeal) {
+                $flashDealProducts = ProductManager::getPriorityWiseFlashDealsProductsQuerySorting(
+                    query: Product::active(),
+                    flashDeal: $flashDeal,
+                    userId: $userId,
+                );
+            }
+
+            return [
+                'flashDeal' => $flashDeal ?? null,
+                'flashDealProducts' => $flashDealProducts ?? null,
+            ];
+        } catch (\Exception $e) {
+            // Tables don't exist yet, return empty array
+            return [
+                'flashDeal' => null,
+                'flashDealProducts' => null,
+            ];
         }
-
-        return [
-            'flashDeal' => $flashDeal ?? null,
-            'flashDealProducts' => $flashDealProducts ?? null,
-        ];
     }
 
     public static function getPriorityWiseFlashDealsProductsQuerySorting($query, $flashDeal, $userId = null)

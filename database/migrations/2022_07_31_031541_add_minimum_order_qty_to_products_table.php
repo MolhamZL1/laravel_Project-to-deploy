@@ -13,9 +13,19 @@ class AddMinimumOrderQtyToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        if (Schema::hasTable('products')) {
+
+            if (Schema::hasTable('products')) {
+
+
+                Schema::table('products', function (Blueprint $table) {
             $table->integer('minimum_order_qty')->after('current_stock')->default(1);
         });
+
+
+            }
+
+        }
     }
 
     /**

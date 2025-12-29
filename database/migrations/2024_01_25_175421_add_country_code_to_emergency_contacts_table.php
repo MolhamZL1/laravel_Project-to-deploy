@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('emergency_contacts', function (Blueprint $table) {
+        if (Schema::hasTable('emergency_contacts')) {
+
+            if (Schema::hasTable('emergency_contacts')) {
+
+
+                Schema::table('emergency_contacts', function (Blueprint $table) {
             $table->string('country_code', 20)->after('name')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

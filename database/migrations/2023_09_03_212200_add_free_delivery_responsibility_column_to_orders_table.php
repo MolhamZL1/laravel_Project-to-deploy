@@ -13,9 +13,19 @@ class AddFreeDeliveryResponsibilityColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        if (Schema::hasTable('orders')) {
+
+            if (Schema::hasTable('orders')) {
+
+
+                Schema::table('orders', function (Blueprint $table) {
             $table->string('free_delivery_bearer')->after('extra_discount_type')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

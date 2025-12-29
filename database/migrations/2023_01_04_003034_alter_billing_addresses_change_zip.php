@@ -13,9 +13,19 @@ class AlterBillingAddressesChangeZip extends Migration
      */
     public function up()
     {
-        Schema::table('billing_addresses', function (Blueprint $table) {
+        if (Schema::hasTable('billing_addresses')) {
+
+            if (Schema::hasTable('billing_addresses')) {
+
+
+                Schema::table('billing_addresses', function (Blueprint $table) {
             $table->string('zip')->change();
         });
+
+
+            }
+
+        }
     }
 
     /**

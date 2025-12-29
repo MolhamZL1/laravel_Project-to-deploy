@@ -13,9 +13,19 @@ class AddTaxTypeToCarts extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
+        if (Schema::hasTable('carts')) {
+
+            if (Schema::hasTable('carts')) {
+
+
+                Schema::table('carts', function (Blueprint $table) {
             $table->string('tax_model', 20)->after('discount')->default('exclude');
         });
+
+
+            }
+
+        }
     }
 
     /**
@@ -26,7 +36,7 @@ class AddTaxTypeToCarts extends Migration
     public function down()
     {
         Schema::table('carts', function (Blueprint $table) {
-            Schema::dropIfExists('tax_model');
+            $table->dropColumn(['tax_model']);
         });
     }
 }

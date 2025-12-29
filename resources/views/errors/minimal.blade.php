@@ -11,9 +11,9 @@
 
         <style>
             :root {
-                --blue: {{ $web_config['primary_color'] }};
-                --primary: {{ $web_config['primary_color'] }};
-                --bs-direction: {{ Session::get('direction') }};
+                --blue: {{ isset($web_config['primary_color']) ? $web_config['primary_color'] : '#007bff' }};
+                --primary: {{ isset($web_config['primary_color']) ? $web_config['primary_color'] : '#007bff' }};
+                --bs-direction: {{ Session::get('direction', 'ltr') }};
                 --theme--text-light: #FFFFFF;
             }
             .btn--primary,

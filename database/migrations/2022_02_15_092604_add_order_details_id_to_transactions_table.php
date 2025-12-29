@@ -13,9 +13,19 @@ class AddOrderDetailsIdToTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        if (Schema::hasTable('transactions')) {
+
+            if (Schema::hasTable('transactions')) {
+
+
+                Schema::table('transactions', function (Blueprint $table) {
             $table->unsignedBigInteger('order_details_id')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

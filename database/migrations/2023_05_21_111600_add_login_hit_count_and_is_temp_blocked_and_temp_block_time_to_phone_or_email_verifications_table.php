@@ -13,11 +13,21 @@ class AddLoginHitCountAndIsTempBlockedAndTempBlockTimeToPhoneOrEmailVerification
      */
     public function up()
     {
-        Schema::table('phone_or_email_verifications', function (Blueprint $table) {
+        if (Schema::hasTable('phone_or_email_verifications')) {
+
+            if (Schema::hasTable('phone_or_email_verifications')) {
+
+
+                Schema::table('phone_or_email_verifications', function (Blueprint $table) {
             $table->tinyInteger('otp_hit_count')->default('0')->after('token');
             $table->boolean('is_temp_blocked')->default('0')->after('otp_hit_count');
             $table->timestamp('temp_block_time')->nullable()->after('is_temp_blocked');
         });
+
+
+            }
+
+        }
     }
 
     /**

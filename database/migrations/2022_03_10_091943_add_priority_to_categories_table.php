@@ -13,9 +13,19 @@ class AddPriorityToCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
+        if (Schema::hasTable('categories')) {
+
+            if (Schema::hasTable('categories')) {
+
+
+                Schema::table('categories', function (Blueprint $table) {
             $table->integer('priority')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

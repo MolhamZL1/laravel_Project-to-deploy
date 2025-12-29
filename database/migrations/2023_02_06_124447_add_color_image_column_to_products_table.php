@@ -13,9 +13,19 @@ class AddColorImageColumnToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        if (Schema::hasTable('products')) {
+
+            if (Schema::hasTable('products')) {
+
+
+                Schema::table('products', function (Blueprint $table) {
             $table->text('color_image')->after('images');
         });
+
+
+            }
+
+        }
     }
 
     /**
@@ -26,7 +36,7 @@ class AddColorImageColumnToProductsTable extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            Schema::dropIfExists('color_image');
+            $table->dropColumn(['color_image']);
         });
     }
 }

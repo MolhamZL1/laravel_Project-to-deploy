@@ -13,11 +13,21 @@ class AddIdentifyRelatedColumnsToAdminsTable extends Migration
      */
     public function up()
     {
-        Schema::table('admins', function (Blueprint $table) {
+        if (Schema::hasTable('admins')) {
+
+            if (Schema::hasTable('admins')) {
+
+
+                Schema::table('admins', function (Blueprint $table) {
             $table->text('identify_image')->nullable()->after('image');
             $table->string('identify_type')->nullable()->after('identify_image');
             $table->integer('identify_number')->nullable()->after('identify_type');
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -11,10 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
+        if (Schema::hasTable('categories')) {
+
+            if (Schema::hasTable('categories')) {
+
+
+                Schema::table('categories', function (Blueprint $table) {
             $table->string('icon_storage_type',10)->default('public')->after('icon')->nullable();
 
         });
+
+
+            }
+
+        }
     }
 
     /**

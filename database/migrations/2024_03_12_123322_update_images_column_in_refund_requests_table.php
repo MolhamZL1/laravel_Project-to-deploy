@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('refund_requests', function (Blueprint $table) {
+        if (Schema::hasTable('refund_requests')) {
+
+            if (Schema::hasTable('refund_requests')) {
+
+
+                Schema::table('refund_requests', function (Blueprint $table) {
             $table->text('images')->nullable()->change();
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -13,9 +13,19 @@ class ChangePassResetEmailCol extends Migration
      */
     public function up()
     {
-        Schema::table('password_resets', function (Blueprint $table) {
+        if (Schema::hasTable('password_resets')) {
+
+            if (Schema::hasTable('password_resets')) {
+
+
+                Schema::table('password_resets', function (Blueprint $table) {
             $table->renameColumn('email', 'identity');
         });
+
+
+            }
+
+        }
     }
 
     /**

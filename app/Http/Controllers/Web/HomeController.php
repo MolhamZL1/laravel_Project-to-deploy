@@ -13,6 +13,7 @@ use App\Models\Banner;
 use App\Models\Brand;
 use App\Models\BusinessSetting;
 use App\Models\Category;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Coupon;
 use App\Models\DealOfTheDay;
 use App\Models\MostDemanded;
@@ -64,8 +65,22 @@ class HomeController extends Controller
         $flashDeal = ProductManager::getPriorityWiseFlashDealsProductsQuery(userId: $userId);
 
         $theme_name = theme_root_path();
-        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        $homeCategories = Category::where('home_status', true)->priority()->get();
+        try {
+            $brand_setting = BusinessSetting::where('type', 'product_brand')->first();
+            $brand_setting = $brand_setting ? $brand_setting->value : null;
+        } catch (\Exception $e) {
+            $brand_setting = null;
+        }
+        
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('categories')) {
+                $homeCategories = Category::where('home_status', true)->priority()->get();
+            } else {
+                $homeCategories = collect([]);
+            }
+        } catch (\Exception $e) {
+            $homeCategories = collect([]);
+        }
         $homeCategories->map(function ($data) {
             $id = '"' . $data['id'] . '"';
             $homeCategoriesProducts = Product::active()
@@ -75,84 +90,165 @@ class HomeController extends Controller
         });
         $current_date = date('Y-m-d H:i:s');
 
-        $topVendorsList = Shop::active()
-            ->withCount(['products' => function ($query) {
-                $query->active();
-            }])
-            ->with('seller', function ($query) {
-                $query->with('product', function ($query) {
-                    $query->active()->with('reviews', function ($query) {
+        try {
+            if (Schema::hasTable('shops')) {
+                $topVendorsList = Shop::active()
+                    ->withCount(['products' => function ($query) {
                         $query->active();
-                    });
-                })
-                    ->withCount(['orders']);
-            })
-            ->get()
-            ->each(function ($shop) {
-                $shop->orders_count = $shop->seller->orders_count;
-                $productReviews = $shop->seller->product->pluck('reviews')->collapse();
-                $shop->average_rating = $productReviews->avg('rating');
-                $shop->review_count = $productReviews->count();
-                $shop->total_rating = $productReviews->sum('rating');
+                    }])
+                    ->with('seller', function ($query) {
+                        $query->with('product', function ($query) {
+                            $query->active()->with('reviews', function ($query) {
+                                $query->active();
+                            });
+                        })
+                            ->withCount(['orders']);
+                    })
+                    ->get()
+                    ->each(function ($shop) {
+                        $shop->orders_count = $shop->seller->orders_count;
+                        $productReviews = $shop->seller->product->pluck('reviews')->collapse();
+                        $shop->average_rating = $productReviews->avg('rating');
+                        $shop->review_count = $productReviews->count();
+                        $shop->total_rating = $productReviews->sum('rating');
 
-                $positiveReviewsCount = $productReviews->where('rating', '>=', 4)->count();
-                $shop->positive_review = ($shop->review_count !== 0) ? ($positiveReviewsCount * 100) / $shop->review_count : 0;
+                        $positiveReviewsCount = $productReviews->where('rating', '>=', 4)->count();
+                        $shop->positive_review = ($shop->review_count !== 0) ? ($positiveReviewsCount * 100) / $shop->review_count : 0;
 
-                $currentDate = date('Y-m-d');
-                $startDate = date('Y-m-d', strtotime($shop['vacation_start_date']));
-                $endDate = date('Y-m-d', strtotime($shop['vacation_end_date']));
-                $shop->is_vacation_mode_now = $shop['vacation_status'] && ($currentDate >= $shop['vacation_start_date']) && ($currentDate <= $shop['vacation_end_date']) ? 1 : 0;
-            })->take(12);
-
-
-        $inhouseProducts = Product::active()->with(['reviews', 'rating'])->withCount('reviews')->where(['added_by' => 'admin'])->get();
-        $inhouseProductCount = $inhouseProducts->count();
-
-        $inhouseReviewData = Review::active()->whereIn('product_id', $inhouseProducts->pluck('id'));
-        $inhouseReviewDataCount = $inhouseReviewData->count();
-        $inhouseRattingStatusPositive = 0;
-        foreach ($inhouseReviewData->pluck('rating') as $singleRating) {
-            ($singleRating >= 4 ? ($inhouseRattingStatusPositive++) : '');
+                        $currentDate = date('Y-m-d');
+                        $startDate = date('Y-m-d', strtotime($shop['vacation_start_date']));
+                        $endDate = date('Y-m-d', strtotime($shop['vacation_end_date']));
+                        $shop->is_vacation_mode_now = $shop['vacation_status'] && ($currentDate >= $shop['vacation_start_date']) && ($currentDate <= $shop['vacation_end_date']) ? 1 : 0;
+                    })->take(12);
+            } else {
+                $topVendorsList = collect([]);
+            }
+        } catch (\Exception $e) {
+            $topVendorsList = collect([]);
         }
 
-        $inhouseShop = $this->getInHouseShopObject();
-        $inhouseShop->id = 0;
-        $inhouseShop->products_count = $inhouseProductCount;
-        $inhouseShop->total_rating = $inhouseReviewDataCount;
-        $inhouseShop->review_count = $inhouseReviewDataCount;
-        $inhouseShop->average_rating = $inhouseReviewData->avg('rating');
-        $inhouseShop->positive_review = $inhouseReviewDataCount != 0 ? ($inhouseRattingStatusPositive * 100) / $inhouseReviewDataCount : 0;
-        $inhouseShop->orders_count = Order::where(['seller_is' => 'admin'])->count();
-        $topVendorsList = $topVendorsList->prepend($inhouseShop);
+
+        try {
+            if (Schema::hasTable('products')) {
+                $inhouseProducts = Product::active()->with(['reviews', 'rating'])->withCount('reviews')->where(['added_by' => 'admin'])->get();
+                $inhouseProductCount = $inhouseProducts->count();
+
+                $inhouseReviewData = Review::active()->whereIn('product_id', $inhouseProducts->pluck('id'));
+                $inhouseReviewDataCount = $inhouseReviewData->count();
+                $inhouseRattingStatusPositive = 0;
+                foreach ($inhouseReviewData->pluck('rating') as $singleRating) {
+                    ($singleRating >= 4 ? ($inhouseRattingStatusPositive++) : '');
+                }
+
+                $inhouseShop = $this->getInHouseShopObject();
+                $inhouseShop->id = 0;
+                $inhouseShop->products_count = $inhouseProductCount;
+                $inhouseShop->total_rating = $inhouseReviewDataCount;
+                $inhouseShop->review_count = $inhouseReviewDataCount;
+                $inhouseShop->average_rating = $inhouseReviewData->avg('rating');
+                $inhouseShop->positive_review = $inhouseReviewDataCount != 0 ? ($inhouseRattingStatusPositive * 100) / $inhouseReviewDataCount : 0;
+                try {
+                    $inhouseShop->orders_count = Order::where(['seller_is' => 'admin'])->count();
+                } catch (\Exception $e) {
+                    $inhouseShop->orders_count = 0;
+                }
+                $topVendorsList = $topVendorsList->prepend($inhouseShop);
+            } else {
+                $inhouseProducts = collect([]);
+                $inhouseProductCount = 0;
+                $inhouseReviewData = collect([]);
+                $inhouseReviewDataCount = 0;
+                $inhouseRattingStatusPositive = 0;
+                $inhouseShop = $this->getInHouseShopObject();
+                $inhouseShop->id = 0;
+                $inhouseShop->products_count = 0;
+                $inhouseShop->total_rating = 0;
+                $inhouseShop->review_count = 0;
+                $inhouseShop->average_rating = 0;
+                $inhouseShop->positive_review = 0;
+                $inhouseShop->orders_count = 0;
+                $topVendorsList = $topVendorsList->prepend($inhouseShop);
+            }
+        } catch (\Exception $e) {
+            $inhouseProducts = collect([]);
+            $inhouseProductCount = 0;
+            $inhouseReviewData = collect([]);
+            $inhouseReviewDataCount = 0;
+            $inhouseRattingStatusPositive = 0;
+            $inhouseShop = $this->getInHouseShopObject();
+            $inhouseShop->id = 0;
+            $inhouseShop->products_count = 0;
+            $inhouseShop->total_rating = 0;
+            $inhouseShop->review_count = 0;
+            $inhouseShop->average_rating = 0;
+            $inhouseShop->positive_review = 0;
+            $inhouseShop->orders_count = 0;
+            $topVendorsList = $topVendorsList->prepend($inhouseShop);
+        }
 
         $topVendorsList = ProductManager::getPriorityWiseTopVendorQuery($topVendorsList);
 
-        $featuredProductsList = ProductManager::getPriorityWiseFeaturedProductsQuery(query: $this->product->active(), dataLimit: 12);
+        try {
+            if (Schema::hasTable('products')) {
+                $featuredProductsList = ProductManager::getPriorityWiseFeaturedProductsQuery(query: $this->product->active(), dataLimit: 12);
+                $latest_products = $this->product->with(['reviews'])->active()->orderBy('id', 'desc')->take(8)->get();
+                $newArrivalProducts = ProductManager::getPriorityWiseNewArrivalProductsQuery(query: $this->product->active(), dataLimit: 8);
+            } else {
+                $featuredProductsList = collect([]);
+                $latest_products = collect([]);
+                $newArrivalProducts = collect([]);
+            }
+        } catch (\Exception $e) {
+            $featuredProductsList = collect([]);
+            $latest_products = collect([]);
+            $newArrivalProducts = collect([]);
+        }
 
-        $latest_products = $this->product->with(['reviews'])->active()->orderBy('id', 'desc')->take(8)->get();
-        $newArrivalProducts = ProductManager::getPriorityWiseNewArrivalProductsQuery(query: $this->product->active(), dataLimit: 8);
+        try {
+            if (Schema::hasTable('brands')) {
+                $brands = Brand::active()->take(15)->get();
+            } else {
+                $brands = collect([]);
+            }
+        } catch (\Exception $e) {
+            $brands = collect([]);
+        }
 
-        $brands = Brand::active()->take(15)->get();
+        try {
+            if (Schema::hasTable('order_details') && Schema::hasTable('products')) {
+                $bestSellProduct = $this->order_details->with('product.reviews')
+                    ->whereHas('product', function ($query) {
+                        $query->active();
+                    })
+                    ->select('product_id', DB::raw('COUNT(product_id) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->take(6)
+                    ->get();
+            } else {
+                $bestSellProduct = collect([]);
+            }
+        } catch (\Exception $e) {
+            $bestSellProduct = collect([]);
+        }
 
-        $bestSellProduct = $this->order_details->with('product.reviews')
-            ->whereHas('product', function ($query) {
-                $query->active();
-            })
-            ->select('product_id', DB::raw('COUNT(product_id) as count'))
-            ->groupBy('product_id')
-            ->orderBy("count", 'desc')
-            ->take(6)
-            ->get();
-
-        $topRated = Review::with('product')
-            ->whereHas('product', function ($query) {
-                $query->active();
-            })
-            ->select('product_id', DB::raw('AVG(rating) as count'))
-            ->groupBy('product_id')
-            ->orderBy("count", 'desc')
-            ->take(6)
-            ->get();
+        try {
+            if (Schema::hasTable('reviews') && Schema::hasTable('products')) {
+                $topRated = Review::with('product')
+                    ->whereHas('product', function ($query) {
+                        $query->active();
+                    })
+                    ->select('product_id', DB::raw('AVG(rating) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->take(6)
+                    ->get();
+            } else {
+                $topRated = collect([]);
+            }
+        } catch (\Exception $e) {
+            $topRated = collect([]);
+        }
 
         if ($bestSellProduct->count() == 0) {
             $bestSellProduct = $latest_products;

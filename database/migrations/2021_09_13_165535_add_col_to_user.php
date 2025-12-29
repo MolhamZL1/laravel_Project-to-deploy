@@ -13,10 +13,20 @@ class AddColToUser extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasTable('users')) {
+
+            if (Schema::hasTable('users')) {
+
+
+                Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_phone_verified')->default(0);
             $table->string('temporary_token')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -13,11 +13,21 @@ class AddLoginHitCountAndIsTempBlockedAndTempBlockTimeToUsersTable extends Migra
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasTable('users')) {
+
+            if (Schema::hasTable('users')) {
+
+
+                Schema::table('users', function (Blueprint $table) {
             $table->tinyInteger('login_hit_count')->default(0);
             $table->boolean('is_temp_blocked')->default(0);
             $table->timestamp('temp_block_time')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

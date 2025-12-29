@@ -13,11 +13,21 @@ class AddProductTypeAndDigitalProductTypeAndDigitalFileReadyToProducts extends M
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        if (Schema::hasTable('products')) {
+
+            if (Schema::hasTable('products')) {
+
+
+                Schema::table('products', function (Blueprint $table) {
             $table->string('product_type', 20)->after('slug')->default('physical');
             $table->string('digital_product_type', 30)->after('refundable')->nullable();
             $table->string('digital_file_ready')->after('digital_product_type')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

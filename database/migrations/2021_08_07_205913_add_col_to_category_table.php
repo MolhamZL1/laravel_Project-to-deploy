@@ -13,9 +13,13 @@ class AddColToCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->boolean('home_status')->default(0);
-        });
+        if (Schema::hasTable('categories')) {
+            Schema::table('categories', function (Blueprint $table) {
+                if (!Schema::hasColumn('categories', 'home_status')) {
+                    $table->boolean('home_status')->default(0);
+                }
+            });
+        }
     }
 
     /**
@@ -25,8 +29,12 @@ class AddColToCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('categories')) {
+            Schema::table('categories', function (Blueprint $table) {
+                if (Schema::hasColumn('categories', 'home_status')) {
+                    $table->dropColumn(['home_status']);
+                }
+            });
+        }
     }
 }

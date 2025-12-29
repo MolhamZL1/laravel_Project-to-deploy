@@ -13,13 +13,23 @@ class ChengeOrderAmountSellerAmountAdminCommissionDeliveryChargeTaxToorderTransa
      */
     public function up()
     {
-        Schema::table('order_transactions', function (Blueprint $table) {
+        if (Schema::hasTable('order_transactions')) {
+
+            if (Schema::hasTable('order_transactions')) {
+
+
+                Schema::table('order_transactions', function (Blueprint $table) {
             $table->decimal('order_amount', 50, 2)->change();
             $table->decimal('seller_amount', 50, 2)->change();
             $table->decimal('admin_commission', 50, 2)->change();
             $table->decimal('delivery_charge', 50, 2)->change();
             $table->decimal('tax', 50, 2)->change();
         });
+
+
+            }
+
+        }
     }
 
     /**

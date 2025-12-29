@@ -13,10 +13,20 @@ class AddProductTypeAndDigitalProductTypeAndDigitalFileReadyToCartsTable extends
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
+        if (Schema::hasTable('carts')) {
+
+            if (Schema::hasTable('carts')) {
+
+
+                Schema::table('carts', function (Blueprint $table) {
             $table->string('product_type', 20)->after('product_id')->default('physical');
             $table->string('digital_product_type', 30)->after('product_type')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

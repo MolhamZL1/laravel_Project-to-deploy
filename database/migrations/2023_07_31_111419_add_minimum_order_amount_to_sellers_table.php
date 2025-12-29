@@ -13,9 +13,19 @@ class AddMinimumOrderAmountToSellersTable extends Migration
      */
     public function up()
     {
-        Schema::table('sellers', function (Blueprint $table) {
+        if (Schema::hasTable('sellers')) {
+
+            if (Schema::hasTable('sellers')) {
+
+
+                Schema::table('sellers', function (Blueprint $table) {
             $table->float('minimum_order_amount')->after('pos_status')->default(0);
         });
+
+
+            }
+
+        }
     }
 
     /**

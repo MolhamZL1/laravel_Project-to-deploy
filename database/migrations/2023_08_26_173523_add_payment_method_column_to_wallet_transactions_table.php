@@ -13,9 +13,19 @@ class AddPaymentMethodColumnToWalletTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('wallet_transactions', function (Blueprint $table) {
+        if (Schema::hasTable('wallet_transactions')) {
+
+            if (Schema::hasTable('wallet_transactions')) {
+
+
+                Schema::table('wallet_transactions', function (Blueprint $table) {
             $table->string('payment_method')->nullable()->after('transaction_type');
         });
+
+
+            }
+
+        }
     }
 
     /**

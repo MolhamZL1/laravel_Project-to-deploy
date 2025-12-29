@@ -13,10 +13,20 @@ class AddSentByAndSendToInNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('notifications', function (Blueprint $table) {
+        if (Schema::hasTable('notifications')) {
+
+            if (Schema::hasTable('notifications')) {
+
+
+                Schema::table('notifications', function (Blueprint $table) {
             $table->string('sent_by')->after('id')->default('system');
             $table->string('sent_to')->after('sent_by')->default('customer');
         });
+
+
+            }
+
+        }
     }
 
     /**

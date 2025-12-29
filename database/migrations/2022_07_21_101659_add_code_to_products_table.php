@@ -13,9 +13,19 @@ class AddCodeToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        if (Schema::hasTable('products')) {
+
+            if (Schema::hasTable('products')) {
+
+
+                Schema::table('products', function (Blueprint $table) {
             $table->string('code',191)->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

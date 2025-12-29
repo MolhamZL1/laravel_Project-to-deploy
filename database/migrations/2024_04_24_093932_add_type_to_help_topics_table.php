@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('help_topics', function (Blueprint $table) {
+        if (Schema::hasTable('help_topics')) {
+
+            if (Schema::hasTable('help_topics')) {
+
+
+                Schema::table('help_topics', function (Blueprint $table) {
             $table->string('type')->default('default')->after('id');
         });
+
+
+            }
+
+        }
     }
 
     /**

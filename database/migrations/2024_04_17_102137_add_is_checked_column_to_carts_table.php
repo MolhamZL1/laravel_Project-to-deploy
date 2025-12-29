@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
+        if (Schema::hasTable('carts')) {
+
+            if (Schema::hasTable('carts')) {
+
+
+                Schema::table('carts', function (Blueprint $table) {
             $table->boolean('is_checked')->default(0)->after('tax_model');
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -13,10 +13,20 @@ class ChangeColTypeAdminWallet extends Migration
      */
     public function up()
     {
-        Schema::table('admin_wallets', function (Blueprint $table) {
+        if (Schema::hasTable('admin_wallets')) {
+
+            if (Schema::hasTable('admin_wallets')) {
+
+
+                Schema::table('admin_wallets', function (Blueprint $table) {
             $table->float('balance')->change();
             $table->float('withdrawn')->change();
         });
+
+
+            }
+
+        }
     }
 
     /**

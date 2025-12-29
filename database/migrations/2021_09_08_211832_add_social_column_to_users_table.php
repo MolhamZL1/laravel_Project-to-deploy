@@ -13,10 +13,20 @@ class AddSocialColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasTable('users')) {
+
+            if (Schema::hasTable('users')) {
+
+
+                Schema::table('users', function (Blueprint $table) {
             $table->string('login_medium')->nullable();
             $table->string('social_id')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

@@ -13,7 +13,12 @@ class AddDeliverymansColumnsToChattingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('chattings', function (Blueprint $table) {
+        if (Schema::hasTable('chattings')) {
+
+            if (Schema::hasTable('chattings')) {
+
+
+                Schema::table('chattings', function (Blueprint $table) {
             $table->bigInteger('user_id')->nullable()->change();
             $table->bigInteger('seller_id')->nullable()->change();
             $table->bigInteger('delivery_man_id')->nullable()->after('seller_id');
@@ -23,6 +28,11 @@ class AddDeliverymansColumnsToChattingsTable extends Migration
             $table->boolean('seen_by_delivery_man')->nullable()->after('seen_by_seller');
             $table->boolean('seen_by_admin')->nullable()->after('seen_by_seller');
         });
+
+
+            }
+
+        }
     }
 
     /**

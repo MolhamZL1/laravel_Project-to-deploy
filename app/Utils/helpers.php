@@ -164,12 +164,17 @@ class Helpers
         if (in_array($name, $check) == true && session()->has($name)) {
             $config = session($name);
         } else {
-            $data = BusinessSetting::where(['type' => $name])->first();
-            if (isset($data)) {
-                $config = json_decode($data['value'], true);
-                if (is_null($config)) {
-                    $config = $data['value'];
+            try {
+                $data = BusinessSetting::where(['type' => $name])->first();
+                if (isset($data)) {
+                    $config = json_decode($data['value'], true);
+                    if (is_null($config)) {
+                        $config = $data['value'];
+                    }
                 }
+            } catch (\Exception $e) {
+                // Table doesn't exist yet, return null
+                $config = null;
             }
 
             if (in_array($name, $check) == true) {

@@ -13,9 +13,19 @@ class AddAttachmentToSupportTicketsTable extends Migration
      */
     public function up()
     {
-        Schema::table('support_tickets', function (Blueprint $table) {
+        if (Schema::hasTable('support_tickets')) {
+
+            if (Schema::hasTable('support_tickets')) {
+
+
+                Schema::table('support_tickets', function (Blueprint $table) {
             $table->json('attachment')->after('description')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**

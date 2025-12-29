@@ -13,9 +13,19 @@ class AddShippingTypeToCartsTable extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
+        if (Schema::hasTable('carts')) {
+
+            if (Schema::hasTable('carts')) {
+
+
+                Schema::table('carts', function (Blueprint $table) {
             $table->string('shipping_type')->nullable();
         });
+
+
+            }
+
+        }
     }
 
     /**
@@ -27,6 +37,6 @@ class AddShippingTypeToCartsTable extends Migration
     {
         Schema::table('carts', function (Blueprint $table) {
             $table->dropColumn('shipping_type');
-        });
+        }); 
     }
 }

@@ -13,9 +13,19 @@ class AddRefundRequestToOrderDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::table('order_details', function (Blueprint $table) {
+        if (Schema::hasTable('order_details')) {
+
+            if (Schema::hasTable('order_details')) {
+
+
+                Schema::table('order_details', function (Blueprint $table) {
             $table->integer('refund_request')->default(0);
         });
+
+
+            }
+
+        }
     }
 
     /**
