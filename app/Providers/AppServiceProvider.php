@@ -89,6 +89,12 @@ class AppServiceProvider extends ServiceProvider
                 'wallet_status' => 0,
                 'loyalty_point_status' => 0,
                 'guest_checkout_status' => 0,
+                'featured_deals' => collect([]),
+                'flash_deals' => null,
+                'shops' => collect([]),
+                'main_categories' => collect([]),
+                'currencies' => collect([]),
+                'social_media' => collect([]),
             ];
             $language = null;
 
