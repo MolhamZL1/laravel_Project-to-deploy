@@ -213,25 +213,39 @@ class HomeController extends Controller
             $brands = collect([]);
         }
 
-        $bestSellProduct = $this->order_details->with('product.reviews')
-            ->whereHas('product', function ($query) {
-                $query->active();
-            })
-            ->select('product_id', DB::raw('COUNT(product_id) as count'))
-            ->groupBy('product_id')
-            ->orderBy("count", 'desc')
-            ->take(6)
-            ->get();
+        $bestSellProduct = collect([]);
+        try {
+            if (Schema::hasTable('order_details') && Schema::hasTable('products')) {
+                $bestSellProduct = $this->order_details->with('product.reviews')
+                    ->whereHas('product', function ($query) {
+                        $query->active();
+                    })
+                    ->select('product_id', DB::raw('COUNT(product_id) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->take(6)
+                    ->get();
+            }
+        } catch (\Exception $e) {
+            $bestSellProduct = collect([]);
+        }
 
-        $topRated = Review::with('product')
-            ->whereHas('product', function ($query) {
-                $query->active();
-            })
-            ->select('product_id', DB::raw('AVG(rating) as count'))
-            ->groupBy('product_id')
-            ->orderBy("count", 'desc')
-            ->take(6)
-            ->get();
+        $topRated = collect([]);
+        try {
+            if (Schema::hasTable('reviews') && Schema::hasTable('products')) {
+                $topRated = Review::with('product')
+                    ->whereHas('product', function ($query) {
+                        $query->active();
+                    })
+                    ->select('product_id', DB::raw('AVG(rating) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->take(6)
+                    ->get();
+            }
+        } catch (\Exception $e) {
+            $topRated = collect([]);
+        }
 
         if ($bestSellProduct->count() == 0) {
             $bestSellProduct = $latest_products;
@@ -241,12 +255,44 @@ class HomeController extends Controller
             $topRated = $bestSellProduct;
         }
 
-        $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select('deal_of_the_days.*', 'products.unit_price')->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
-        $main_banner = $this->banner->where(['banner_type' => 'Main Banner', 'theme' => $theme_name, 'published' => 1])->latest()->get();
-        $main_section_banner = $this->banner->where(['banner_type' => 'Main Section Banner', 'theme' => $theme_name, 'published' => 1])->orderBy('id', 'desc')->latest()->first();
+        $deal_of_the_day = null;
+        try {
+            if (Schema::hasTable('deal_of_the_days') && Schema::hasTable('products')) {
+                $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select('deal_of_the_days.*', 'products.unit_price')->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
+            }
+        } catch (\Exception $e) {
+            $deal_of_the_day = null;
+        }
+        
+        $main_banner = collect([]);
+        $main_section_banner = null;
+        try {
+            if (Schema::hasTable('banners')) {
+                $main_banner = $this->banner->where(['banner_type' => 'Main Banner', 'theme' => $theme_name, 'published' => 1])->latest()->get();
+                $main_section_banner = $this->banner->where(['banner_type' => 'Main Section Banner', 'theme' => $theme_name, 'published' => 1])->orderBy('id', 'desc')->latest()->first();
+            }
+        } catch (\Exception $e) {
+            $main_banner = collect([]);
+            $main_section_banner = null;
+        }
 
-        $recommendedProduct = $this->product->active()->inRandomOrder()->first();
-        $footer_banner = $this->banner->where('banner_type', 'Footer Banner')->where('theme', theme_root_path())->where('published', 1)->orderBy('id', 'desc')->get();
+        $recommendedProduct = null;
+        try {
+            if (Schema::hasTable('products')) {
+                $recommendedProduct = $this->product->active()->inRandomOrder()->first();
+            }
+        } catch (\Exception $e) {
+            $recommendedProduct = null;
+        }
+        
+        $footer_banner = collect([]);
+        try {
+            if (Schema::hasTable('banners')) {
+                $footer_banner = $this->banner->where('banner_type', 'Footer Banner')->where('theme', theme_root_path())->where('published', 1)->orderBy('id', 'desc')->get();
+            }
+        } catch (\Exception $e) {
+            $footer_banner = collect([]);
+        }
 
         return view(VIEW_FILE_NAMES['home'],
             compact(
