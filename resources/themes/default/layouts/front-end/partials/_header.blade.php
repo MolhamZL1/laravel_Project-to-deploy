@@ -349,7 +349,15 @@
                                 </ul>
                             </li>
                         @endif
-                        @php($discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count())
+                        @php
+                            try {
+                                $discount_product = \Illuminate\Support\Facades\Schema::hasTable('products') 
+                                    ? App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count() 
+                                    : 0;
+                            } catch (\Exception $e) {
+                                $discount_product = 0;
+                            }
+                        @endphp
                         @if ($discount_product>0)
                             <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
                                 <a class="nav-link text-capitalize"
