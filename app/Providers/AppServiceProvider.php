@@ -100,6 +100,10 @@ class AppServiceProvider extends ServiceProvider
                 'recaptcha' => null,
                 'socials_login' => null,
                 'social_login_text' => null,
+                'popup_banner' => null,
+                'header_banner' => null,
+                'payments_list' => collect([]),
+                'ref_earning_status' => 0,
             ];
             $language = null;
 
