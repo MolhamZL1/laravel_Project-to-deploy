@@ -86,14 +86,18 @@ if (!function_exists('getDefaultLanguage')) {
             $data = getWebConfig('language');
             $code = 'en';
             $direction = 'ltr';
-            foreach ($data as $ln) {
-                if (array_key_exists('default', $ln) && $ln['default']) {
-                    $code = $ln['code'];
-                    if (array_key_exists('direction', $ln)) {
-                        $direction = $ln['direction'];
+            
+            if (is_array($data) && !empty($data)) {
+                foreach ($data as $ln) {
+                    if (is_array($ln) && array_key_exists('default', $ln) && $ln['default']) {
+                        $code = $ln['code'] ?? 'en';
+                        if (array_key_exists('direction', $ln)) {
+                            $direction = $ln['direction'];
+                        }
                     }
                 }
             }
+            
             session()->put('local', $code);
             Session::put('direction', $direction);
             $lang = $code;
@@ -106,9 +110,12 @@ if (!function_exists('getLanguageName')) {
     function getLanguageName(string $key): string
     {
         $values = getWebConfig('language');
-        foreach ($values as $value) {
-            if ($value['code'] == $key) {
-                $key = $value['name'];
+        if (is_array($values) && !empty($values)) {
+            foreach ($values as $value) {
+                if (is_array($value) && isset($value['code']) && $value['code'] == $key) {
+                    $key = $value['name'] ?? $key;
+                    break;
+                }
             }
         }
         return $key;
