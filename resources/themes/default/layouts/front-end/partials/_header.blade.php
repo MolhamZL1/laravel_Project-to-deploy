@@ -350,10 +350,11 @@
                             </li>
                         @endif
                         @php
+                            $discount_product = 0;
                             try {
-                                $discount_product = \Illuminate\Support\Facades\Schema::hasTable('products') 
-                                    ? App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count() 
-                                    : 0;
+                                if (\Illuminate\Support\Facades\Schema::hasTable('products')) {
+                                    $discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count();
+                                }
                             } catch (\Exception $e) {
                                 $discount_product = 0;
                             }
