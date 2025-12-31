@@ -5,12 +5,12 @@
 @push('css_or_js')
     <meta property="og:image" content="{{$web_config['web_logo']['path']}}"/>
     <meta property="og:title" content="Welcome To {{$web_config['name']->value}} Home"/>
-    <meta property="og:url" content="{{url('/')}}">
+    <meta property="og:url" content="{{env('APP_URL')}}">
     <meta property="og:description" content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)),0,160) }}">
 
     <meta property="twitter:card" content="{{$web_config['web_logo']['path']}}"/>
     <meta property="twitter:title" content="Welcome To {{$web_config['name']->value}} Home"/>
-    <meta property="twitter:url" content="{{url('/')}}">
+    <meta property="twitter:url" content="{{env('APP_URL')}}">
     <meta property="twitter:description" content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)),0,160) }}">
 
     <link rel="stylesheet" href="{{theme_asset(path: 'public/assets/front-end/css/home.css')}}"/>
@@ -61,9 +61,7 @@
             </div>
         @endif
 
-        @if(isset($categories) && $categories->count() > 0)
-            @include('web-views.partials._category-section-home')
-        @endif
+        @include('web-views.partials._category-section-home')
 
         @if($web_config['featured_deals'] && (count($web_config['featured_deals'])>0))
                 <!-- <section class="featured_deal">
@@ -103,7 +101,7 @@
         @endif
 
         @php($businessMode = getWebConfig(name: 'business_mode'))
-        @if ($businessMode == 'multi' && isset($topVendorsList) && $topVendorsList->count() > 0)
+        @if ($businessMode == 'multi' && count($topVendorsList) > 0)
             @include('web-views.partials._top-sellers')
         @endif
 
@@ -175,7 +173,7 @@
             </div>
         @endif
 
-        @if(isset($web_config['brand_setting']) && $web_config['brand_setting'] && isset($brands) && $brands->count() > 0)
+        @if($web_config['brand_setting'] && $brands->count() > 0)
             <section class="container rtl pt-4">
 
                 <div class="section-header">
@@ -206,11 +204,9 @@
             </section>
         @endif
 
-        @if(isset($homeCategories) && $homeCategories->count() > 0)
+        @if ($homeCategories->count() > 0)
             @foreach($homeCategories as $category)
-                @if(isset($category['products']) && count($category['products']) > 0)
-                    @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings, 'category'=>$category])
-                @endif
+                @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings])
             @endforeach
         @endif
 
