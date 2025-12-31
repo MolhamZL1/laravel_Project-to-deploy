@@ -5,12 +5,12 @@
 @push('css_or_js')
     <meta property="og:image" content="{{$web_config['web_logo']['path']}}"/>
     <meta property="og:title" content="Welcome To {{$web_config['name']->value}} Home"/>
-    <meta property="og:url" content="{{env('APP_URL')}}">
+    <meta property="og:url" content="{{url('/')}}">
     <meta property="og:description" content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)),0,160) }}">
 
     <meta property="twitter:card" content="{{$web_config['web_logo']['path']}}"/>
     <meta property="twitter:title" content="Welcome To {{$web_config['name']->value}} Home"/>
-    <meta property="twitter:url" content="{{env('APP_URL')}}">
+    <meta property="twitter:url" content="{{url('/')}}">
     <meta property="twitter:description" content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)),0,160) }}">
 
     <link rel="stylesheet" href="{{theme_asset(path: 'public/assets/front-end/css/home.css')}}"/>
@@ -61,33 +61,35 @@
             </div>
         @endif
 
-        @include('web-views.partials._category-section-home')
+        @if(isset($categories) && $categories->count() > 0)
+            @include('web-views.partials._category-section-home')
+        @endif
 
         @if($web_config['featured_deals'] && (count($web_config['featured_deals'])>0))
-            <section class="featured_deal">
-                <div class="container">
-                    <div class="__featured-deal-wrap bg--light">
-                        <div class="d-flex flex-wrap justify-content-between gap-8 mb-3">
-                            <div class="w-0 flex-grow-1">
-                                <span class="featured_deal_title font-bold text-dark">{{ translate('featured_deal')}}</span>
-                                <br>
-                                <span class="text-left text-nowrap">{{ translate('see_the_latest_deals_and_exciting_new_offers')}}!</span>
+                <!-- <section class="featured_deal">
+                    <div class="container">
+                        <div class="__featured-deal-wrap bg--light">
+                            <div class="d-flex flex-wrap justify-content-between gap-8 mb-3">
+                                <div class="w-0 flex-grow-1">
+                                    <span class="featured_deal_title font-bold text-dark">{{ translate('featured_deal')}}</span>
+                                    <br>
+                                    <span class="text-left text-nowrap">{{ translate('see_the_latest_deals_and_exciting_new_offers')}}!</span>
+                                </div>
+                                <div>
+                                    <a class="text-capitalize view-all-text web-text-primary" href="{{route('products',['data_from'=>'featured_deal'])}}">
+                                        {{ translate('view_all')}}
+                                        <i class="czi-arrow-{{Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1' : 'right ml-1'}}"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <div>
-                                <a class="text-capitalize view-all-text web-text-primary" href="{{route('products',['data_from'=>'featured_deal'])}}">
-                                    {{ translate('view_all')}}
-                                    <i class="czi-arrow-{{Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1' : 'right ml-1'}}"></i>
-                                </a>
+                            <div class="owl-carousel owl-theme new-arrivals-product">
+                                @foreach($web_config['featured_deals'] as $key=>$product)
+                                    @include('web-views.partials._product-card-1',['product'=>$product, 'decimal_point_settings'=>$decimalPointSettings])
+                                @endforeach
                             </div>
-                        </div>
-                        <div class="owl-carousel owl-theme new-arrivals-product">
-                            @foreach($web_config['featured_deals'] as $key=>$product)
-                                @include('web-views.partials._product-card-1',['product'=>$product, 'decimal_point_settings'=>$decimalPointSettings])
-                            @endforeach
                         </div>
                     </div>
-                </div>
-            </section>
+                </section> -->
         @endif
 
         @if (isset($main_section_banner))
@@ -101,11 +103,11 @@
         @endif
 
         @php($businessMode = getWebConfig(name: 'business_mode'))
-        @if ($businessMode == 'multi' && count($topVendorsList) > 0)
+        @if ($businessMode == 'multi' && isset($topVendorsList) && $topVendorsList->count() > 0)
             @include('web-views.partials._top-sellers')
         @endif
 
-        @include('web-views.partials._deal-of-the-day', ['decimal_point_settings'=>$decimalPointSettings])
+        <!-- @include('web-views.partials._deal-of-the-day', ['decimal_point_settings'=>$decimalPointSettings])
 
         <section class="new-arrival-section">
 
@@ -146,7 +148,7 @@
                     @endif
                 </div>
             </div>
-        </section>
+        </section> -->
 
 
         @if (count($footer_banner) > 1)
@@ -173,7 +175,7 @@
             </div>
         @endif
 
-        @if($web_config['brand_setting'] && $brands->count() > 0)
+        @if(isset($web_config['brand_setting']) && $web_config['brand_setting'] && isset($brands) && $brands->count() > 0)
             <section class="container rtl pt-4">
 
                 <div class="section-header">
@@ -204,9 +206,11 @@
             </section>
         @endif
 
-        @if ($homeCategories->count() > 0)
+        @if(isset($homeCategories) && $homeCategories->count() > 0)
             @foreach($homeCategories as $category)
-                @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings])
+                @if(isset($category['products']) && count($category['products']) > 0)
+                    @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings, 'category'=>$category])
+                @endif
             @endforeach
         @endif
 

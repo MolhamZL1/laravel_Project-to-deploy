@@ -61,7 +61,9 @@
             </div>
         @endif
 
-        @include('web-views.partials._category-section-home')
+        @if(isset($categories) && $categories->count() > 0)
+            @include('web-views.partials._category-section-home')
+        @endif
 
         @if($web_config['featured_deals'] && (count($web_config['featured_deals'])>0))
                 <!-- <section class="featured_deal">
@@ -101,7 +103,7 @@
         @endif
 
         @php($businessMode = getWebConfig(name: 'business_mode'))
-        @if ($businessMode == 'multi' && count($topVendorsList) > 0)
+        @if ($businessMode == 'multi' && isset($topVendorsList) && $topVendorsList->count() > 0)
             @include('web-views.partials._top-sellers')
         @endif
 
@@ -173,7 +175,7 @@
             </div>
         @endif
 
-        @if($web_config['brand_setting'] && $brands->count() > 0)
+        @if(isset($web_config['brand_setting']) && $web_config['brand_setting'] && isset($brands) && $brands->count() > 0)
             <section class="container rtl pt-4">
 
                 <div class="section-header">
@@ -204,9 +206,11 @@
             </section>
         @endif
 
-        @if ($homeCategories->count() > 0)
+        @if(isset($homeCategories) && $homeCategories->count() > 0)
             @foreach($homeCategories as $category)
-                @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings])
+                @if(isset($category['products']) && count($category['products']) > 0)
+                    @include('web-views.partials._category-wise-product', ['decimal_point_settings'=>$decimalPointSettings, 'category'=>$category])
+                @endif
             @endforeach
         @endif
 

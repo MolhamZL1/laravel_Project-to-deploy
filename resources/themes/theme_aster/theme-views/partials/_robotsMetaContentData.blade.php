@@ -18,8 +18,8 @@
     <meta property="twitter:description" content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)),0,160) }}">
 @endif
 
-<meta property="og:url" content="{{ url('/') }}">
-<meta property="twitter:url" content="{{ url('/') }}">
+<meta property="og:url" content="{{ env('APP_URL') }}">
+<meta property="twitter:url" content="{{ env('APP_URL') }}">
 
 @if(isset($robotsMetaContentData) && $robotsMetaContentData?->meta_image_full_url['path'])
     <meta property="og:image" content="{{ $robotsMetaContentData?->meta_image_full_url['path'] }}">

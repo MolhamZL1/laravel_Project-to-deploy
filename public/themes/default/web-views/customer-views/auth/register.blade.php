@@ -53,6 +53,13 @@
 
                             </div>
                         </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label font-semibold">{{ translate('address') }} <small class="text-muted">({{ translate('optional') }})</small></label>
+                                <input class="form-control text-align-direction" value="{{ old('address') }}" type="text" name="address"
+                                        placeholder="{{ translate('Ex') }}: 123 Main Street, City">
+                            </div>
+                        </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="form-label font-semibold">{{ translate('password') }} <small class="text-danger mx-1 password-error"></small></label>
