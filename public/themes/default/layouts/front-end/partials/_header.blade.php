@@ -1,18 +1,18 @@
-@php($announcement=getWebConfig(name: 'announcement'))
+@php
+    $announcement = getWebConfig(name: 'announcement');
+@endphp
 
-@if (isset($announcement) && $announcement['status']==1)
+@if (isset($announcement) && $announcement['status'] == 1)
     <div class="text-center position-relative px-4 py-1" id="announcement"
-         style="background-color: {{ $announcement['color'] }};color:{{$announcement['text_color']}}">
-        <span>{{ $announcement['announcement'] }} </span>
+         style="background-color: {{ $announcement['color'] }}; color: {{ $announcement['text_color'] }}">
+        <span>{{ $announcement['announcement'] }}</span>
         <span class="__close-announcement web-announcement-slideUp">X</span>
     </div>
 @endif
 
-
 <header class="rtl __inline-10">
     <div class="topbar">
         <div class="container">
-
             <div>
                 <div class="topbar-text dropdown d-md-none ms-auto">
                     <a class="topbar-link direction-ltr" href="tel: {{$web_config['phone']->value}}">
@@ -27,7 +27,9 @@
             </div>
 
             <div>
-                @php($currency_model = getWebConfig(name: 'currency_model'))
+                @php
+                    $currency_model = getWebConfig(name: 'currency_model');
+                @endphp
                 @if($currency_model=='multi_currency')
                     <div class="topbar-text dropdown disable-autohide mr-4">
                         <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown">
@@ -74,7 +76,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="navbar-sticky bg-light mobile-head">
         <div class="navbar navbar-expand-md navbar-light">
@@ -349,7 +350,16 @@
                                 </ul>
                             </li>
                         @endif
-                        @php($discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count())
+                        @php
+                            $discount_product = 0;
+                            try {
+                                if (\Illuminate\Support\Facades\Schema::hasTable('products')) {
+                                    $discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count();
+                                }
+                            } catch (\Exception $e) {
+                                $discount_product = 0;
+                            }
+                        @endphp
                         @if ($discount_product>0)
                             <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
                                 <a class="nav-link text-capitalize"
