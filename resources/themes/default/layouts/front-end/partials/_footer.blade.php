@@ -102,7 +102,16 @@
                             <div class="col-sm-3 col-6 footer-padding-bottom text-start">
                                 <h6 class="text-uppercase mobile-fs-12 font-semi-bold footer-header">{{ translate('special')}}</h6>
                                 <ul class="widget-list __pb-10px">
-                                    @php($flash_deals=\App\Models\FlashDeal::where(['status'=>1,'deal_type'=>'flash_deal'])->whereDate('start_date','<=',date('Y-m-d'))->whereDate('end_date','>=',date('Y-m-d'))->first())
+                                    @php
+                                        $flash_deals = null;
+                                        try {
+                                            if (\Illuminate\Support\Facades\Schema::hasTable('flash_deals')) {
+                                                $flash_deals = \App\Models\FlashDeal::where(['status'=>1,'deal_type'=>'flash_deal'])->whereDate('start_date','<=',date('Y-m-d'))->whereDate('end_date','>=',date('Y-m-d'))->first();
+                                            }
+                                        } catch (\Exception $e) {
+                                            $flash_deals = null;
+                                        }
+                                    @endphp
                                     @if(isset($flash_deals))
                                         <li class="widget-list-item">
                                             <a class="widget-list-link"

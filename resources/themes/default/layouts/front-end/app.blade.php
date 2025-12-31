@@ -12,8 +12,8 @@
     <meta name="yandex-verification" content="{{getWebConfig('yandex_webmaster_code')}}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ $web_config['fav_icon']['path'] }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ $web_config['fav_icon']['path'] }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ isset($web_config['fav_icon']) && is_array($web_config['fav_icon']) && isset($web_config['fav_icon']['path']) ? $web_config['fav_icon']['path'] : theme_asset(path: 'public/assets/front-end/img/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ isset($web_config['fav_icon']) && is_array($web_config['fav_icon']) && isset($web_config['fav_icon']['path']) ? $web_config['fav_icon']['path'] : theme_asset(path: 'public/assets/front-end/img/favicon.png') }}">
     <link rel="stylesheet" media="screen" href="{{ theme_asset(path: 'public/assets/front-end/vendor/simplebar/dist/simplebar.min.css') }}">
     <link rel="stylesheet" media="screen" href="{{ theme_asset(path: 'public/assets/front-end/vendor/tiny-slider/dist/tiny-slider.css') }}">
     <link rel="stylesheet" media="screen" href="{{ theme_asset(path: 'public/assets/front-end/vendor/drift-zoom/dist/drift-basic.min.css') }}">
@@ -182,7 +182,7 @@
 <span id="is-request-customer-auth-sign-up" data-value="{{ Request::is('customer/auth/sign-up*') ? 1:0 }}"></span>
 <span id="is-customer-auth-active" data-value="{{ auth('customer')->check() ? 1:0 }}"></span>
 
-<span id="storage-flash-deals" data-value="{{ $web_config['flash_deals']['start_date'] ?? '' }}"></span>
+<span id="storage-flash-deals" data-value="{{ isset($web_config['flash_deals']) && is_array($web_config['flash_deals']) && isset($web_config['flash_deals']['start_date']) ? $web_config['flash_deals']['start_date'] : '' }}"></span>
 
 @include('layouts.front-end.partials._footer')
 @include('layouts.front-end.partials.modal._dynamic-modals')

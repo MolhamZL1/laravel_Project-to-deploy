@@ -25,8 +25,21 @@
 
             @include('web-views.partials._profile-aside')
 
-            @php($product = App\Models\Product::find($order_details->product_id))
-            @php($order = App\Models\Order::find($order_details->order_id))
+            @php
+                $product = null;
+                $order = null;
+                try {
+                    if (\Illuminate\Support\Facades\Schema::hasTable('products') && isset($order_details->product_id)) {
+                        $product = App\Models\Product::find($order_details->product_id);
+                    }
+                    if (\Illuminate\Support\Facades\Schema::hasTable('orders') && isset($order_details->order_id)) {
+                        $order = App\Models\Order::find($order_details->order_id);
+                    }
+                } catch (\Exception $e) {
+                    $product = null;
+                    $order = null;
+                }
+            @endphp
             <section class="col-lg-9 col-md-8">
                 <div class="card box-shadow-sm">
                     <div class="overflow-auto">
@@ -35,34 +48,45 @@
                                 <div class="row">
                                     <div class="col-3 col-sm-2">
                                         <img class="d-block"
-                                             src="{{ getStorageImages(path: $product->thumbnail_full_url, type: 'product') }}"
+                                             src="{{ $product && isset($product->thumbnail_full_url) ? getStorageImages(path: $product->thumbnail_full_url, type: 'product') : theme_asset(path: 'public/assets/front-end/img/placeholder/product.png') }}"
                                              alt="{{ translate('product') }}" width="60">
                                     </div>
                                     <div class="col-9 col-sm-7 text-left">
-                                        <p>{{$product['name']}}</p>
+                                        <p>{{ $product && isset($product->name) ? $product->name : translate('product_not_found') }}</p>
                                         <span>{{translate('variant')}} : </span>
-                                        {{$order_details->variant}}
+                                        {{ $order_details->variant ?? '-' }}
                                     </div>
                                     <div class="col-4 col-sm-3 text-left d-flex flex-column pl-0 mt-2 mt-sm-0 pl-sm-5">
-                                        <span>{{translate('QTY')}} : {{$order_details->qty}}</span>
-                                        <span>{{translate('price')}} : {{ webCurrencyConverter(amount: $order_details->price) }}</span>
-                                        <span>{{translate('discount')}} : {{ webCurrencyConverter(amount: $order_details->discount) }}</span>
-                                        <span>{{translate('tax')}} : {{ webCurrencyConverter(amount: $order_details->tax) }}</span>
+                                        <span>{{translate('QTY')}} : {{ $order_details->qty ?? 0 }}</span>
+                                        <span>{{translate('price')}} : {{ webCurrencyConverter(amount: $order_details->price ?? 0) }}</span>
+                                        <span>{{translate('discount')}} : {{ webCurrencyConverter(amount: $order_details->discount ?? 0) }}</span>
+                                        <span>{{translate('tax')}} : {{ webCurrencyConverter(amount: $order_details->tax ?? 0) }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <?php
                             $total_product_price = 0;
-                            foreach ($order->details as $key => $or_d) {
-                                $total_product_price += ($or_d->qty * $or_d->price) + $or_d->tax - $or_d->discount;
-                            }
                             $refund_amount = 0;
-                            $subtotal = ($order_details->price * $order_details->qty) - $order_details->discount + $order_details->tax;
-
-                            $coupon_discount = ($order->discount_amount * $subtotal) / $total_product_price;
-
-                            $refund_amount = $subtotal - $coupon_discount;
+                            $subtotal = 0;
+                            $coupon_discount = 0;
+                            
+                            if ($order && isset($order->details)) {
+                                foreach ($order->details as $key => $or_d) {
+                                    $total_product_price += ($or_d->qty * $or_d->price) + ($or_d->tax ?? 0) - ($or_d->discount ?? 0);
+                                }
+                                
+                                $subtotal = (($order_details->price ?? 0) * ($order_details->qty ?? 0)) - ($order_details->discount ?? 0) + ($order_details->tax ?? 0);
+                                
+                                if ($total_product_price > 0 && isset($order->discount_amount)) {
+                                    $coupon_discount = ($order->discount_amount * $subtotal) / $total_product_price;
+                                }
+                                
+                                $refund_amount = $subtotal - $coupon_discount;
+                            } else {
+                                $subtotal = (($order_details->price ?? 0) * ($order_details->qty ?? 0)) - ($order_details->discount ?? 0) + ($order_details->tax ?? 0);
+                                $refund_amount = $subtotal;
+                            }
                         ?>
 
                         <div class="card mt-2">

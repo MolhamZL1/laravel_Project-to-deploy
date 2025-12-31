@@ -75,14 +75,26 @@
                     @php($sub_total=0)
                     @php($total_tax=0)
                     @foreach($cart as  $cartItem)
-                        @php($product=\App\Models\Product::find($cartItem['product_id']))
+                        @php
+                            $product = null;
+                            try {
+                                if (\Illuminate\Support\Facades\Schema::hasTable('products')) {
+                                    $product = \App\Models\Product::find($cartItem['product_id']);
+                                }
+                            } catch (\Exception $e) {
+                                $product = null;
+                            }
+                        @endphp
 
                         <?php
-                            $getProductCurrentStock = $product->current_stock;
-                            if(!empty($product->variation)) {
-                                foreach(json_decode($product->variation, true) as $productVariantSingle) {
-                                    if($productVariantSingle['type'] == $cartItem->variant) {
-                                        $getProductCurrentStock = $productVariantSingle['qty'];
+                            $getProductCurrentStock = 0;
+                            if ($product) {
+                                $getProductCurrentStock = $product->current_stock ?? 0;
+                                if(!empty($product->variation)) {
+                                    foreach(json_decode($product->variation, true) as $productVariantSingle) {
+                                        if($productVariantSingle['type'] == $cartItem->variant) {
+                                            $getProductCurrentStock = $productVariantSingle['qty'] ?? 0;
+                                        }
                                     }
                                 }
                             }
@@ -92,17 +104,17 @@
                             <div class="media">
                                 <a class="d-block me-2 position-relative overflow-hidden"
                                    href="{{route('product',$cartItem['slug'])}}">
-                                    <img width="64" class="{{ $product ? ($product->status == 0?'blur-section':'') : 'blur-section' }}"
-                                         src="{{ getStorageImages(path: $product->thumbnail_full_url, type: 'backend-product') }}"
+                                    <img width="64" class="{{ ($product && isset($product->status) && $product->status == 0) ? 'blur-section' : '' }}"
+                                         src="{{ $product && isset($product->thumbnail_full_url) ? getStorageImages(path: $product->thumbnail_full_url, type: 'backend-product') : theme_asset(path: 'public/assets/front-end/img/placeholder/product.png') }}"
                                          alt="{{ translate('product') }}"/>
-                                    @if (!$product || $product->status == 0)
+                                    @if (!$product || (isset($product->status) && $product->status == 0))
                                         <span class="temporary-closed position-absolute text-center p-2">
                                             <span>{{ translate('N/A') }}</span>
                                         </span>
                                     @endif
                                 </a>
                                 <div
-                                    class="media-body min-height-0 d-flex align-items-center {{ $product ? ($product->status == 0?'blur-section':'') : 'blur-section' }}">
+                                    class="media-body min-height-0 d-flex align-items-center {{ ($product && isset($product->status) && $product->status == 0) ? 'blur-section' : '' }}">
                                     <div class="w-0 flex-grow-1">
                                         <h6 class="widget-product-title mb-0 mr-2">
                                             <a href="{{route('product',$cartItem['slug'])}}" class="line--limit-1">
