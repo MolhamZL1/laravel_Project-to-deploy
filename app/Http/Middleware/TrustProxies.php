@@ -12,7 +12,7 @@ class TrustProxies extends Middleware
      *
      * @var array|string
      */
-    protected $proxies;
+    protected $proxies = '*'; // Trust all proxies (needed for Railway/Heroku)
 
     /**
      * The headers that should be used to detect proxies.

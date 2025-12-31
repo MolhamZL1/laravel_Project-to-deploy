@@ -96,3 +96,4 @@
         .append("<i class='czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }}'></i>");
 </script>
 @endpush
+
