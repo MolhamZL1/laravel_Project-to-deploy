@@ -26,7 +26,8 @@
                                             <a href="{{route('products',['id'=> $category['id'] ?? 0,'data_from'=>'category','page'=>1])}}">
                                                 <div class="__img">
                                                     <img alt="{{ $category->name ?? '' }}"
-                                                         src="{{ getStorageImages(path:$category->icon_full_url ?? null, type: 'category') }}">
+                                                         {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                                                         src="{{ getStorageImages($category->icon_full_url ?? null, 'category') }}">
                                                 </div>
                                                 <p class="text-center fs-13 font-semibold mt-2">{{ Str::limit($category->name ?? '', 12) }}</p>
                                             </a>
@@ -43,7 +44,8 @@
                                             <a href="{{route('products',['id'=> $category['id'] ?? 0,'data_from'=>'category','page'=>1])}}">
                                                 <div class="__img mw-100 h-auto">
                                                     <img alt="{{ $category->name ?? '' }}"
-                                                         src="{{ getStorageImages(path: $category->icon_full_url ?? null, type: 'category') }}">
+                                                         {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                                                         src="{{ getStorageImages($category->icon_full_url ?? null, 'category') }}">
                                                 </div>
                                                 <p class="text-center small mt-2">{{ Str::limit($category->name ?? '', 12) }}</p>
                                             </a>

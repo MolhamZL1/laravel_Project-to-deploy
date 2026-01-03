@@ -173,11 +173,7 @@
             </div>
         @endif
 
-        @php
-            $brands = $brands ?? collect([]);
-            $brand_setting = isset($web_config['brand_setting']) ? $web_config['brand_setting'] : '0';
-        @endphp
-        @if($brand_setting && $brands->count() > 0)
+        @if($web_config['brand_setting'] && $brands->count() > 0)
             <section class="container rtl pt-4">
 
                 <div class="section-header">

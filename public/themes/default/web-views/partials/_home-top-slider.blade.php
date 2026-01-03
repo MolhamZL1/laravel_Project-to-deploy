@@ -41,7 +41,8 @@
                         @foreach($main_banner as $key=>$banner)
                             <a href="{{$banner['url']}}" class="d-block" target="_blank">
                                 <img class="w-100 __slide-img" alt=""
-                                    src="{{ getStorageImages(path: $banner->photo_full_url, type: 'banner') }}">
+                                    {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                                    src="{{ getStorageImages($banner->photo_full_url, 'banner') }}">
                             </a>
                         @endforeach
                     </div>

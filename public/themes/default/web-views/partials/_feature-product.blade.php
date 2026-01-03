@@ -1,4 +1,7 @@
-@php($overallRating = getOverallRating($product->reviews))
+{{-- FIXED: Converted @php(...) to proper @php block --}}
+@php
+    $overallRating = getOverallRating($product->reviews);
+@endphp
 <div class="product-single-hover shadow-none rtl">
     <div class="overflow-hidden position-relative">
         <div class="inline_product clickable">
@@ -8,7 +11,8 @@
                         @if ($product->discount_type == 'percent')
                             -{{round($product->discount,(!empty($decimal_point_settings) ? $decimal_point_settings: 0))}}%
                         @elseif($product->discount_type =='flat')
-                            -{{ webCurrencyConverter(amount: $product->discount) }}
+                            {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                            -{{ webCurrencyConverter($product->discount) }}
                         @endif
                     </span>
                 </span>
@@ -16,7 +20,8 @@
                 <span class="for-discount-value-null"></span>
             @endif
             <a href="{{route('product',$product->slug)}}">
-                <img src="{{ getStorageImages(path: $product->thumbnail_full_url, type: 'product') }}" alt="">
+                {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                <img src="{{ getStorageImages($product->thumbnail_full_url, 'product') }}" alt="">
             </a>
 
             <div class="quick-view">
@@ -54,17 +59,16 @@
                 <div class="product-price">
                     @if($product->discount > 0)
                         <del class="category-single-product-price">
-                            {{ webCurrencyConverter(amount: $product->unit_price) }}
+                            {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                            {{ webCurrencyConverter($product->unit_price) }}
                         </del>
                     @endif
                     <span class="text-accent text-dark">
-                        {{ webCurrencyConverter(amount:
-                            $product->unit_price-(getProductDiscount(product: $product, price: $product->unit_price))
-                        ) }}
+                        {{-- FIXED: Removed named arguments to prevent PHP 8.2 ParseError --}}
+                        {{ webCurrencyConverter($product->unit_price - getProductDiscount($product, $product->unit_price)) }}
                     </span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
