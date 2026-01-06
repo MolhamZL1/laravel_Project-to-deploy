@@ -1,74 +1,85 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -e
 
 echo "=== DB init + migrate on boot ==="
 
+: "${DB_HOST:?DB_HOST is required}"
+: "${DB_PORT:?DB_PORT is required}"
+: "${DB_DATABASE:?DB_DATABASE is required}"
+: "${DB_USERNAME:?DB_USERNAME is required}"
+: "${DB_PASSWORD:?DB_PASSWORD is required}"
+
+export MYSQL_PWD="$DB_PASSWORD"
+
 cd /var/www/html
 
-DB_HOST="${DB_HOST:-mysql}"
-DB_PORT="${DB_PORT:-3306}"
-DB_DATABASE="${DB_DATABASE:-mydb}"
-DB_USERNAME="${DB_USERNAME:-root}"
-DB_PASSWORD="${DB_PASSWORD:-}"
-
-# Where you will place the FULL schema dump (create tables)
-DB_SCHEMA_DUMP="${DB_SCHEMA_DUMP:-/var/www/html/docker/db/schema.sql}"
-
-# Wait for DB
 echo "Waiting for database connection..."
 for i in $(seq 1 60); do
-  php -r "
-    try {
-      new PDO('mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_DATABASE', '$DB_USERNAME', '$DB_PASSWORD');
-      echo 'DB OK';
-    } catch (Exception \$e) { exit(1); }
-  " >/dev/null 2>&1 && break
+  if mariadb -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -e "SELECT 1" >/dev/null 2>&1; then
+    echo "DB OK"
+    break
+  fi
+  echo "DB not ready... ($i/60)"
   sleep 2
 done
 
-php -r "
-  try {
-    new PDO('mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_DATABASE', '$DB_USERNAME', '$DB_PASSWORD');
-    echo \"DB OK\n\";
-  } catch (Exception \$e) {
-    echo \"DB NOT READY\n\";
-    exit(1);
-  }
-"
+# تحقق DB
+mariadb -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -e "USE \`$DB_DATABASE\`;" >/dev/null 2>&1 || {
+  echo "ERROR: Cannot use database $DB_DATABASE"
+  exit 1
+}
 
-# Check if migrations table exists
-HAS_MIGRATIONS_TABLE=$(php -r "
-  try {
-    \$pdo=new PDO('mysql:host=$DB_HOST;port=$DB_PORT;dbname=information_schema', '$DB_USERNAME', '$DB_PASSWORD');
-    \$stmt=\$pdo->prepare('SELECT COUNT(*) FROM TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME=?');
-    \$stmt->execute(['$DB_DATABASE','migrations']);
-    echo (int)\$stmt->fetchColumn();
-  } catch (Exception \$e) { echo 0; }
-")
+# إصلاح صلاحيات storage (لحل Failed to clear cache)
+mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache storage/logs
+chown -R application:application storage bootstrap/cache || true
+chmod -R 775 storage bootstrap/cache || true
+rm -rf storage/framework/cache/* storage/framework/views/* storage/framework/sessions/* || true
+chown -R application:application storage bootstrap/cache || true
+chmod -R 775 storage bootstrap/cache || true
 
-if [ "$HAS_MIGRATIONS_TABLE" -eq 0 ]; then
-  echo "Fresh DB detected (no migrations table)."
+# هل flash_deals موجود؟
+HAS_FLASH_DEALS=$(mariadb -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -D "$DB_DATABASE" -Nse "SHOW TABLES LIKE 'flash_deals';" || true)
 
-  if [ -f "$DB_SCHEMA_DUMP" ]; then
-    echo "Importing FULL schema dump: $DB_SCHEMA_DUMP"
-    # Use mariadb client (mysql alias). MYSQL_PWD avoids showing password in process list
-    export MYSQL_PWD="$DB_PASSWORD"
-    mariadb -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USERNAME" "$DB_DATABASE" < "$DB_SCHEMA_DUMP"
-    echo "Schema import done."
-  else
-    echo "ERROR: No schema dump found at $DB_SCHEMA_DUMP"
-    echo "You MUST add a full DB schema SQL dump there (create tables), otherwise migrations will fail on ALTERs."
+if [ -z "$HAS_FLASH_DEALS" ]; then
+  echo "flash_deals not found. Trying to import the LARGEST SQL dump in project..."
+
+  # اختر أكبر ملف sql داخل المشروع (بدون -printf للتوافق)
+  SQL_FILE=$(
+    find /var/www/html -maxdepth 8 -type f -name "*.sql" -exec sh -c '
+      for f do
+        s=$(stat -c%s "$f" 2>/dev/null || echo 0)
+        echo "$s $f"
+      done
+    ' sh {} + 2>/dev/null | sort -nr | head -n 1 | cut -d" " -f2-
+  )
+
+  if [ -z "$SQL_FILE" ]; then
+    echo "ERROR: No .sql files found in project."
     exit 1
   fi
+
+  # حماية: لو الملف صغير جداً غالباً مو dump كامل
+  SQL_SIZE=$(stat -c%s "$SQL_FILE" 2>/dev/null || echo 0)
+  echo "Picked SQL: $SQL_FILE (size=$SQL_SIZE bytes)"
+
+  if [ "$SQL_SIZE" -lt 200000 ]; then
+    echo "ERROR: SQL file is too small to be a full dump. (likely partial like payment_requests.sql)"
+    echo "Put the REAL full dump SQL inside the repo and redeploy."
+    exit 1
+  fi
+
+  echo "Importing SQL dump..."
+  mariadb -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" "$DB_DATABASE" < "$SQL_FILE"
+  echo "SQL import done."
+else
+  echo "flash_deals exists. Skipping SQL import."
 fi
 
-# Fix permissions again before artisan cache operations
-mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache storage/logs
-chown -R application:application storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+# حاول clear cache (حتى لو فشل لا نوقف)
+php artisan config:clear || true
+php artisan cache:clear || true
 
-# Now run migrations
 echo "Running migrations..."
 php artisan migrate --force --no-interaction
 
-echo "=== DB init + migrate done ==="
+echo "=== Done ==="
