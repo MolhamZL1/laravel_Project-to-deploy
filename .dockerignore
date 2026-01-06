@@ -1,0 +1,10 @@
+.git
+node_modules
+vendor/bin
+tests
+storage/logs/*.log
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/*
+docker-compose*
+README.md
