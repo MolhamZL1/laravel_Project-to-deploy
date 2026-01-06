@@ -3,22 +3,35 @@ set -e
 
 echo "=== Laravel migrate on boot ==="
 
-# انتظر DB شوي (اختياري لكنه مهم)
+# انتظار DB
 echo "Waiting for database connection..."
 for i in $(seq 1 30); do
-  php -r "try { new PDO('mysql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD')); echo 'DB OK\n'; } catch (Exception \$e) { echo 'DB not ready\n'; exit(1); }" \
-    && break || true
+  php -r "
+  try {
+    new PDO(
+      'mysql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE'),
+      getenv('DB_USERNAME'),
+      getenv('DB_PASSWORD')
+    );
+    echo 'DB OK\n';
+    exit(0);
+  } catch (Exception \$e) {
+    exit(1);
+  }" && break || true
   sleep 2
 done
 
-# امسح كاش الكونفيغ (مهم إذا تغيرت env)
+# تنظيف كاش (بدون ما يوقف على permissions)
 php artisan config:clear || true
 php artisan cache:clear || true
 
-# migrate (هذا اللي بيعمل جدول guest_users)
-php artisan migrate --force
+echo "Running migrations..."
+if php artisan migrate --force; then
+  echo "Migrations completed successfully."
+else
+  echo "⚠️ Migrations failed (likely due to missing tables)."
+  echo "Trying to continue without stopping container..."
+fi
 
-# (اختياري) إذا مشروعك يحتاج seed:
-# php artisan db:seed --force
-
-echo "=== Migrate done ==="
+echo "=== Migrate step finished ==="
+exit 0
