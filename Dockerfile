@@ -6,26 +6,32 @@ ENV WEB_DOCUMENT_ROOT=/var/www/html/public \
 
 WORKDIR /var/www/html
 
-RUN apk add --no-cache git curl zip unzip bash \
-    icu-dev libzip-dev oniguruma-dev \
+# Tools + mysql-client مهم للاستيراد
+RUN apk add --no-cache \
+      git curl zip unzip bash \
+      icu-dev libzip-dev oniguruma-dev \
+      mysql-client \
     && rm -rf /var/cache/apk/*
 
+# Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Copy project
 COPY . .
 
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress \
-    && chown -R application:application storage bootstrap/cache \
+# Install dependencies
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+# Permissions (مهم قبل تشغيل السكربتات)
+RUN chown -R application:application storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# ✅ سكربتات الإقلاع
+# Entrypoint scripts
 RUN mkdir -p /opt/docker/provision/entrypoint.d
 
-# سكربت البوت الأساسي
 COPY docker/10-laravel-boot.sh /opt/docker/provision/entrypoint.d/10-laravel-boot.sh
-
-# ✅ سكربت المايغريشن وقت الإقلاع (هام لحل مشكلة guest_users)
-COPY docker/20-migrate-on-boot.sh /opt/docker/provision/entrypoint.d/20-migrate-on-boot.sh
+COPY docker/20-db-init-and-migrate.sh /opt/docker/provision/entrypoint.d/20-db-init-and-migrate.sh
+COPY docker/30-cache-on-boot.sh /opt/docker/provision/entrypoint.d/30-cache-on-boot.sh
 
 RUN chmod +x /opt/docker/provision/entrypoint.d/*.sh
 

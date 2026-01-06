@@ -1,18 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -e
-cd /var/www/html
 
-# إذا APP_KEY فاضي بالمتحوّلات، ولّده
-if [ -z "${APP_KEY}" ] || [ "${APP_KEY}" = "null" ]; then
-  php artisan key:generate --force || true
-fi
+echo "=== Laravel boot ==="
 
-# كاشات الإنتاج
 php artisan storage:link || true
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
 
-# صلاحيات
-chown -R application:application storage bootstrap/cache || true
-chmod -R 775 storage bootstrap/cache || true
+chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache || true
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache || true
+
+echo "=== Boot done ==="
