@@ -1,27 +1,26 @@
-# ====== Stage 1: Build frontend assets (Vite / Mix) ======
+# ====== Stage 1: Build frontend assets (Mix / Vite) ======
 FROM node:20-alpine AS assets
 WORKDIR /app
 
-# انسخ ملفات npm أولاً للاستفادة من الكاش
 COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 
-# ثبت الاعتمادات
 RUN if [ -f package-lock.json ]; then npm ci; \
     elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
     elif [ -f pnpm-lock.yaml ]; then corepack enable && pnpm i --frozen-lockfile; \
     else npm i; fi
 
-# انسخ الملفات اللازمة للبناء
-COPY vite.config.* postcss.config.* tailwind.config.* ./
+# ✅ مهم لمشاريع Laravel Mix
+COPY webpack.mix.js* webpack.config.js* babel.config.js* .babelrc* tsconfig.json* ./
+
+# ملفات الواجهة
 COPY resources/ resources/
 COPY public/ public/
 
-# نفّذ build إذا موجود (يدعم Vite أو Mix)
+# نفّذ build حسب الموجود
 RUN if npm run | grep -qE " build"; then npm run build; \
     elif npm run | grep -qE " production"; then npm run production; \
     elif npm run | grep -qE " prod"; then npm run prod; \
     else echo "No frontend build script found. Skipping assets build."; fi
-
 
 # ====== Stage 2: PHP + Nginx (Laravel app) ======
 FROM webdevops/php-nginx:8.2-alpine
