@@ -15,12 +15,18 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . .
 
 RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress \
-    && php artisan storage:link || true \
     && chown -R application:application storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# ✅ سكربتات الإقلاع
 RUN mkdir -p /opt/docker/provision/entrypoint.d
+
+# سكربت البوت الأساسي
 COPY docker/10-laravel-boot.sh /opt/docker/provision/entrypoint.d/10-laravel-boot.sh
+
+# ✅ سكربت المايغريشن وقت الإقلاع (هام لحل مشكلة guest_users)
+COPY docker/20-migrate-on-boot.sh /opt/docker/provision/entrypoint.d/20-migrate-on-boot.sh
+
 RUN chmod +x /opt/docker/provision/entrypoint.d/*.sh
 
 EXPOSE 80
