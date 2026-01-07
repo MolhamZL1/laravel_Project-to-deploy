@@ -1,13 +1,10 @@
 #!/bin/sh
 set -e
 
-echo "=== Laravel boot ==="
-cd /var/www/html
+php artisan storage:link || true
+php artisan view:cache || true
+php artisan route:cache || true
+php artisan config:cache || true
 
-mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache storage/logs
 chown -R application:application storage bootstrap/cache || true
 chmod -R 775 storage bootstrap/cache || true
-
-php artisan storage:link || true
-
-echo "=== Boot done ==="
